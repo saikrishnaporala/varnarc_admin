@@ -2,7 +2,11 @@
 @section('title') @lang('translation.contacts') @endsection
 @section('css')
 <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
-
+<!--datatable css-->
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<!--datatable responsive css-->
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 @section('css')
 @endsection
@@ -26,7 +30,7 @@
                                 <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
                                 <button class="btn btn-danger"><i
                                         class="ri-filter-2-line me-1 align-bottom"></i> Filters</button>
-                                <button class="btn btn-soft-success">Import</button>
+                                <button class="btn btn-soft-success" id="showImport">Import</button>
                                 <button type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown"
                                     aria-expanded="false" class="btn btn-soft-info"><i
                                         class="ri-more-2-fill"></i></button>
@@ -93,84 +97,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
-                                    <tr>
-                                        <th scope="row">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
-                                            </div>
-                                        </th>
-                                        <td class="id" style="display:none;"><a href="javascript:void(0);" class="fw-medium link-primary">#VZ001</a></td>
-                                        <td class="name">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0">
-                                                    <img src="{{ URL::asset('build/images/users/avatar-10.jpg') }}"
-                                                        alt="" class="avatar-xs rounded-circle" >
-                                                </div>
-                                                <div class="flex-grow-1 ms-2 name">Tonya Noble</div>
-                                            </div>
-                                        </td>
-                                        <td class="name">Tonya Noble</td>
-                                        <td class="company_name">Nesta Technologies</td>
-                                         <!-- <td class="designation">Lead Designer / Developer</td> -->
-                                        <td class="email_id">tonyanoble@velzon.com</td>
-                                        <td class="phone">414-453-5725</td>
-                                        <td class="lead_score">154</td>
-                                        <td class="tags">
-                                            <span class="badge bg-primary-subtle text-primary">Lead</span>
-                                            <span class="badge bg-primary-subtle text-primary">Partner</span>
-                                        </td>
-                                        <td class="date">15 Dec, 2021 <small class="text-muted">08:58AM</small></td>
-                                        <td>
-                                            <ul class="list-inline hstack gap-2 mb-0">
-                                                <li class="list-inline-item edit"
-                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                    data-bs-placement="top" title="Call">
-                                                    <a href="javascript:void(0);"
-                                                        class="text-muted d-inline-block">
-                                                        <i class="ri-phone-line fs-16"></i>
-                                                    </a>
-                                                </li>
-                                                <li class="list-inline-item edit"
-                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                    data-bs-placement="top" title="Message">
-                                                    <a href="javascript:void(0);"
-                                                        class="text-muted d-inline-block">
-                                                        <i class="ri-question-answer-line fs-16"></i>
-                                                    </a>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                    <div class="dropdown">
-                                                        <button
-                                                            class="btn btn-soft-secondary btn-sm dropdown"
-                                                            type="button" data-bs-toggle="dropdown"
-                                                            aria-expanded="false">
-                                                            <i class="ri-more-fill align-middle"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-end">
-                                                            <li><a class="dropdown-item view-item-btn"
-                                                                    href="javascript:void(0);"><i
-                                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                                    View</a></li>
-                                                            <li><a class="dropdown-item edit-item-btn"
-                                                                    href="#showModal"
-                                                                    data-bs-toggle="modal"><i
-                                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                                                                    Edit</a></li>
-                                                            <li>
-                                                                <a class="dropdown-item remove-item-btn"
-                                                                    data-bs-toggle="modal"
-                                                                    href="#deleteRecordModal">
-                                                                    <i
-                                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
-                                                                    Delete
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
+                                    
                                 </tbody>
                             </table>
                             <div class="noresult" style="display: none">
@@ -333,6 +260,71 @@
         </div>
         <!--end col-->
         <div class="col-xxl-3">
+            <div id="importMessage" class="mt-3"></div>
+            {{-- Hidden Import Section (First Screenshot UI) --}}
+            <div class="card" id="importSection" style="display: none;">
+                <div class="card-body">
+
+                    {{-- Upload CSV/Excel --}}
+                    <h5>Upload CSV / Excel</h5>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="file" class="form-label">File</label>
+                            <input type="file" name="file" class="form-control" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="table_name" class="form-control" placeholder="Table name (optional)">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <select name="if_exists" class="form-control">
+                                    <option value="append">Append</option>
+                                    <option value="replace">Replace</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Import</button>
+                    </form>
+
+                    <hr>
+
+                    {{-- Import from URL --}}
+                    <h5>Import from URL</h5>
+                    <form method="POST" id="importurl">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="file_url" class="form-label">File URL (CSV/XLSX/XLS)</label>
+                            <input type="url" name="file_url" class="form-control" placeholder="https://..." required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <input type="text" name="table_name" class="form-control" placeholder="Table name (optional)">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <select name="if_exists" class="form-control">
+                                    <option value="append">Append</option>
+                                    <option value="replace">Replace</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <select name="file_type" class="form-control">
+                                    <option value="auto">Auto</option>
+                                    <option value="csv">CSV</option>
+                                    <option value="xlsx">XLSX</option>
+                                    <option value="xls">XLS</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Import</button>
+                    </form>
+
+                </div>
+            </div>
             <div class="card" id="contact-view-detail">
                 <div class="card-body text-center">
                     <div class="position-relative d-inline-block">
@@ -414,7 +406,20 @@
 @section('script')
     <script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>
     <script src="{{ URL::asset('build/libs/list.pagination.js/list.pagination.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+    <script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
+
     <script src="{{ URL::asset('build/js/pages/crm-contact.init.js') }}"></script>
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection
