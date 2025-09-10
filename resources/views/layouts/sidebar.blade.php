@@ -61,8 +61,50 @@
                             </li>
                         </ul>
                     </div>
-                </li> <!-- end Dashboard Menu -->
-
+                </li> 
+                <li class="nav-item">
+                    <a href="#sidebarOfferings" class="nav-link" href="apps-offerings-services" role="button">
+                        <i class="ri-service-fill"></i>@lang('translation.services')
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#sidebarCRM" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCRM">@lang('translation.crm')
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarCRM">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="apps-crm-contacts" class="nav-link">@lang('translation.contacts')</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="apps-crm-companies" class="nav-link">@lang('translation.companies')</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="apps-crm-deals" class="nav-link">@lang('translation.deals')</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="apps-crm-leads" class="nav-link">@lang('translation.leads')</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                {{-- <li class="nav-item">
+                    <a href="#sidebarOfferings" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarEcommerce">
+                        <i class="ri-service-fill"></i>@lang('translation.offerings')
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarOfferings">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="apps-offerings-services" class="nav-link">@lang('translation.services')</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="apps-offerings-service-details" class="nav-link">@lang('translation.service-Details')</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="apps-offerings-add-service" class="nav-link">@lang('translation.create-service')</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li> --}}
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
@@ -175,26 +217,7 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li class="nav-item">
-                                <a href="#sidebarCRM" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCRM">@lang('translation.crm')
-                                </a>
-                                <div class="collapse menu-dropdown" id="sidebarCRM">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="apps-crm-contacts" class="nav-link">@lang('translation.contacts')</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="apps-crm-companies" class="nav-link">@lang('translation.companies')</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="apps-crm-deals" class="nav-link">@lang('translation.deals')</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="apps-crm-leads" class="nav-link">@lang('translation.leads')</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
+                            
                             <li class="nav-item">
                                 <a href="#sidebarCrypto" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCrypto">@lang('translation.crypto')
                                 </a>

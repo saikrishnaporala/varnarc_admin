@@ -195,6 +195,119 @@
                                 <form class="tablelist-form" autocomplete="off">
                                     <div class="modal-body">
                                         <input type="hidden" id="id-field" />
+                                        {{-- Tabs --}}
+                                        <ul class="nav nav-tabs mb-3" id="leadTab" role="tablist">
+                                            <li class="nav-item">
+                                                <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab">Details</button>
+                                            </li>
+                                            <li class="nav-item">
+                                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab">Contact Person</button>
+                                            </li>
+                                            <li class="nav-item">
+                                                <button class="nav-link" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab">Products</button>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab-content" id="leadTabContent">
+                                            {{-- Details Tab --}}
+                                            <div class="tab-pane fade show active" id="details" role="tabpanel">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Title *</label>
+                                                        <input type="text" class="form-control" name="title" required>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Expected Close Date</label>
+                                                        <input type="date" class="form-control" name="expected_close_date">
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Description</label>
+                                                    <textarea class="form-control" name="description" rows="2"></textarea>
+                                                </div>
+
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Source *</label>
+                                                        <select class="form-select" name="source" required>
+                                                            <option value="">Select</option>
+                                                            <option value="website">Website</option>
+                                                            <option value="email">Email</option>
+                                                            <option value="phone">Phone</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Type *</label>
+                                                        <select class="form-select" name="type" required>
+                                                            <option value="">Select</option>
+                                                            <option value="new">New</option>
+                                                            <option value="existing">Existing</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Sales Owner</label>
+                                                        <select class="form-select" name="sales_owner">
+                                                            <option value="">Select</option>
+                                                            <option value="1">John Doe</option>
+                                                            <option value="2">Jane Smith</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Lead Value (₹) *</label>
+                                                        <input type="number" class="form-control" name="lead_value" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {{-- Contact Person Tab --}}
+                                            <div class="tab-pane fade" id="contact" role="tabpanel">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Name *</label>
+                                                    <input type="text" class="form-control" name="contact_name" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Email *</label>
+                                                    <input type="email" class="form-control" name="contact_email" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Contact Number</label>
+                                                    <input type="text" class="form-control" name="contact_number">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Organization</label>
+                                                    <input type="text" class="form-control" name="organization">
+                                                </div>
+                                            </div>
+
+                                            {{-- Products Tab --}}
+                                            <div class="tab-pane fade" id="products" role="tabpanel">
+                                                <table class="table table-bordered" id="productsTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product Name</th>
+                                                            <th>Quantity</th>
+                                                            <th>Price</th>
+                                                            <th>Amount</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><input type="text" class="form-control" name="products[0][name]"></td>
+                                                            <td><input type="number" class="form-control qty" name="products[0][quantity]" value="1"></td>
+                                                            <td><input type="number" class="form-control price" name="products[0][price]" value="0"></td>
+                                                            <td><input type="text" class="form-control amount" readonly></td>
+                                                            <td><button type="button" class="btn btn-sm btn-danger removeRow">X</button></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <button type="button" id="addRow" class="btn btn-outline-primary btn-sm">+ Add More</button>
+                                            </div>
+                                        </div>
                                         <div class="row g-3">
                                             <div class="col-lg-12">
                                                 <div class="text-center">
@@ -227,7 +340,6 @@
                                                         required />
                                                 </div>
                                             </div>
-                                            <!--end col-->
                                             <div class="col-lg-12">
                                                 <div>
                                                     <label for="company_name-field"
@@ -237,7 +349,6 @@
                                                         placeholder="Enter company name" required />
                                                 </div>
                                             </div>
-                                            <!--end col-->
                                             <div class="col-lg-6">
                                                 <div>
                                                     <label for="leads_score-field"
@@ -247,7 +358,6 @@
                                                         placeholder="Enter lead score" required />
                                                 </div>
                                             </div>
-                                            <!--end col-->
                                             <div class="col-lg-6">
                                                 <div>
                                                     <label for="phone-field"
@@ -257,7 +367,6 @@
                                                         placeholder="Enter phone no" required />
                                                 </div>
                                             </div>
-                                            <!--end col-->
                                             <div class="col-lg-12">
                                                 <div>
                                                     <label for="location-field"
@@ -267,7 +376,6 @@
                                                         placeholder="Enter location" required />
                                                 </div>
                                             </div>
-                                            <!--end col-->
                                             <div class="col-lg-12">
                                                 <div>
                                                     <label for="taginput-choices" class="form-label">Tags</label>
@@ -289,9 +397,7 @@
                                                         placeholder="Select Date" required />
                                                 </div>
                                             </div>
-                                            <!--end col-->
                                         </div>
-                                        <!--end row-->
                                     </div>
                                     <div class="modal-footer">
                                         <div class="hstack gap-2 justify-content-end">
@@ -299,8 +405,8 @@
                                                 data-bs-dismiss="modal">Close</button>
                                             <button type="submit" class="btn btn-success"
                                                 id="add-btn">Add leads</button>
-                                            {{-- <button type="button" class="btn btn-success"
-                                                id="edit-btn">Update</button> --}}
+                                            <button type="button" class="btn btn-success"
+                                                id="edit-btn">Update</button>
                                         </div>
                                     </div>
                                 </form>

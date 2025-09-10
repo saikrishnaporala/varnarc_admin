@@ -1176,5 +1176,8 @@
     "/assets/css/bootstrap.min.css": "/assets/css/bootstrap.min.css",
     "/assets/css/icons.min.css": "/assets/css/icons.min.css",
     "/assets/css/app.min.css": "/assets/css/app.min.css",
-    "/assets/css/custom.min.css": "/assets/css/custom.min.css"
+    "/assets/css/custom.min.css": "/assets/css/custom.min.css",
+    "/assets/js/pages/offerings-services-create.init.js": "/assets/js/pages/offerings-services-create.init.js",
+    "/assets/js/pages/offerings-services-details.init.js": "/assets/js/pages/offerings-services-details.init.js",
+    "/assets/js/pages/offerings-services-list.init.js": "/assets/js/pages/offerings-services-list.init.js"
 }
