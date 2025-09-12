@@ -40,6 +40,23 @@ Route::get('/debug-key', function () {
     ];
 });
 
+use Illuminate\Support\Facades\Crypt;
+
+Route::get('/test-encrypt', function () {
+    try {
+        $encrypted = Crypt::encryptString('hello world');
+        $decrypted = Crypt::decryptString($encrypted);
+        return [
+            'encrypted' => $encrypted,
+            'decrypted' => $decrypted,
+            'key' => config('app.key'),
+            'cipher' => config('app.cipher'),
+        ];
+    } catch (\Exception $e) {
+        return ['error' => $e->getMessage()];
+    }
+});
+
 Route::get('/run-composer/{cmd}', function ($cmd) {
     if (request('key') !== env('APP_SECRET_KEY')) {
         abort(403, 'Unauthorized');
