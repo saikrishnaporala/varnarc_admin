@@ -33,6 +33,13 @@ Route::get('/clear-cache', function () {
     return "All caches cleared!";
 });
 
+Route::get('/debug-key', function () {
+    return [
+        'env' => env('APP_KEY'),
+        'config' => config('app.key'),
+    ];
+});
+
 Route::get('/run-composer/{cmd}', function ($cmd) {
     if (request('key') !== env('APP_SECRET_KEY')) {
         abort(403, 'Unauthorized');
