@@ -63,7 +63,7 @@
                     </div>
                 </li> 
                 <li class="nav-item">
-                    <a href="#sidebarOfferings" class="nav-link" href="apps-offerings-services" role="button">
+                    <a class="nav-link" href="apps-offerings-services" role="button">
                         <i class="ri-service-fill"></i>@lang('translation.services')
                     </a>
                 </li>
