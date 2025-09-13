@@ -77,16 +77,16 @@ class DataDumpController extends Controller
                 // if ($fileId) {
                 //     $this->driveService->downloadFile($fileId, $tempPath);
 
-                    // Save metadata
-                    // DriveFile::updateOrCreate(
-                    //     ['file_id' => $fileId],
-                    //     [
-                    //         'name' => basename($tempPath),
-                    //         'mime' => $fileType,
-                    //         'url'  => "https://drive.google.com/file/d/{$fileId}/view",
-                    //         'size' => $file['size'] ?? null,
-                    //     ]
-                    // );
+                // Save metadata
+                // DriveFile::updateOrCreate(
+                //     ['file_id' => $fileId],
+                //     [
+                //         'name' => basename($tempPath),
+                //         'mime' => $fileType,
+                //         'url'  => "https://drive.google.com/file/d/{$fileId}/view",
+                //         'size' => $file['size'] ?? null,
+                //     ]
+                // );
                 // } else {
                 //     $fileContent = file_get_contents($fileUrl);
                 //     file_put_contents($tempPath, $fileContent);
@@ -124,7 +124,7 @@ class DataDumpController extends Controller
 
             return response()->json([
                 'status'  => 'success',
-                'message' => "File {$file->name} imported successfully."
+                'message' => "File {makeTableName($file->name)} imported successfully."
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -150,5 +150,23 @@ class DataDumpController extends Controller
             return $matches[1];
         }
         return null;
+    }
+
+    function makeTableName(string $filename): string
+    {
+        // Remove extension
+        $name = pathinfo($filename, PATHINFO_FILENAME);
+
+        // Replace anything not a-z, A-Z, 0-9 with underscore
+        $name = preg_replace('/[^A-Za-z0-9]+/', '_', $name);
+
+        // Trim multiple underscores
+        $name = preg_replace('/_+/', '_', $name);
+
+        // Remove leading/trailing underscores
+        $name = trim($name, '_');
+
+        // Convert to lowercase
+        return strtolower($name);
     }
 }
