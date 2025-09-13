@@ -25,6 +25,7 @@ class ContactImportController extends Controller
 
     public function importFromGoogleDrive(Request $request)
     {
+        ini_set('memory_limit', '512M');
         $request->validate([
             'file_url'   => 'required|url',
             'table_name' => 'required|string|max:150',
