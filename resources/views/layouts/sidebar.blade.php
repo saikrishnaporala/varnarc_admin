@@ -63,6 +63,11 @@
                     </div>
                 </li> 
                 <li class="nav-item">
+                    <a class="nav-link" href="commands-execution" role="button">
+                        <i class="ri-service-fill"></i>@lang('translation.commands')
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="apps-offerings-services" role="button">
                         <i class="ri-service-fill"></i>@lang('translation.services')
                     </a>

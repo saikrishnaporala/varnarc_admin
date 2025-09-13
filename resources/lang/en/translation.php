@@ -18,6 +18,7 @@ return [
     "service-Details"=>"Service Details",
     "create-product"=>"Create Product",
     "create-service"=>"Create Service",
+    "commands" => "Commands Execution",
     "orders"=>"Orders",
     "order-details"=>"Order Details",
     "customers"=>"Customers",
