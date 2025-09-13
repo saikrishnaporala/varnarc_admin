@@ -107,6 +107,33 @@ class DataDumpController extends Controller
         }
     }
 
+    public function import($id)
+    {
+        try {
+            // Find file record
+            $file = DriveFile::findOrFail($id);
+
+            // // Download + import
+            // $tempPath = storage_path("app/temp_import_" . $file['id'] . ".xlsx");
+            // $this->driveService->downloadFile($file['id'], $tempPath);
+            // $this->importService->processFile($tempPath, $file->name, 'append');
+
+            // // Mark file as imported
+            // $file->status = 'imported';
+            // $file->save();
+
+            return response()->json([
+                'status'  => 'success',
+                'message' => "File {$file->name} imported successfully."
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     private function extractFileId(string $url): ?string
     {
         if (preg_match('/\/d\/(.*?)\//', $url, $matches)) {

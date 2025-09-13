@@ -28,6 +28,8 @@ Route::apiResource('datadump', DataDumpController::class);
 
 Route::post('/drive/download', [GoogleDriveController::class, 'download']);
 Route::post('/import/google-drive', [DataDumpController::class, 'importFromGoogleDrive']);
+Route::post('/datadump/{id}', [DataDumpController::class, 'import']);
+
 
 use App\Http\Controllers\Api\CommandController;
 

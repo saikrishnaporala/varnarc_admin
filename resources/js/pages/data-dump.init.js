@@ -75,10 +75,12 @@ $(document).ready(function () {
                                         <i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>
                                     <li><a class="dropdown-item edit-item-btn" href="${dump.url ?? ''}" target="_blank">
                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Open</a></li>
-                                    <li><a class="dropdown-item remove-item-btn" href="javascript:void(0);" data-id="${dump.id}">
-                                        <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete</a></li>
-                                    <li><a class="dropdown-item remove-item-btn" href="javascript:void(0);" data-id="${dump.id}">
-                                        <i class="ri-database-2-fill align-bottom me-2 text-muted"></i> Import</a></li>
+                                    ${dump.status !== 'imported' ? `
+                                        <li>
+                                            <a class="dropdown-item import-item-btn" href="javascript:void(0);" data-id="${dump.id}">
+                                                <i class="ri-database-2-fill align-bottom me-2 text-muted"></i> Import
+                                            </a>
+                                        </li>` : ''}
                                 </ul>
                             </div>
                         </td>
@@ -134,36 +136,13 @@ $(document).ready(function () {
         });
     });
 
-    // Edit contact
-    $(document).on("click", ".edit-item-btn", function () {
-        let id = $(this).data("id");
-        $.get(`/api/contacts/${id}`, function (contact) {
-            $("#id-field").val(contact.id);
-            $("#customername-field").val(contact.name);
-            $("#company_name-field").val(contact.company_name);
-            $("#designation-field").val(contact.designation);
-            $("#email_id-field").val(contact.email);
-            $("#phone-field").val(contact.phone);
-            $("#lead_score-field").val(contact.lead_score);
-            $("#taginput-choices").val(contact.tags).trigger("change");
-
-            $("#exampleModalLabel").text("Edit Contact");
-            $("#add-btn").text("Update Contact");
-            $("#showModal").modal("show");
-        });
-    });
-
-    // Delete contact
-    let deleteId;
-    $(document).on("click", ".remove-item-btn", function () {
-        deleteId = $(this).data("id");
-        $("#deleteRecordModal").modal("show");
-    });
-
-    $("#delete-record").click(function () {
+    // Import contact
+    let importId;
+    $(document).on("click", ".import-item-btn", function () {
+        importId = $(this).data("id");
         $.ajax({
-            url: `/api/contacts/${deleteId}`,
-            type: "DELETE",
+            url: `/api/datadump/${importId}`,
+            type: "Post",
             success: function () {
                 $("#deleteRecordModal").modal("hide");
                 loadContacts();
