@@ -8,7 +8,7 @@ use App\Http\Services\GoogleDriveService;
 use App\Http\Services\ImportService;
 use App\Models\DriveFile;
 
-class ContactImportController extends Controller
+class DataDumpController extends Controller
 {
     protected $driveService;
     protected $importService;
@@ -17,6 +17,12 @@ class ContactImportController extends Controller
     {
         $this->driveService = $driveService;
         $this->importService = $importService;
+    }
+
+    // List all Drive Files
+    public function index()
+    {
+        return response()->json(DriveFile::all());
     }
 
     public function importFromGoogleDrive(Request $request)

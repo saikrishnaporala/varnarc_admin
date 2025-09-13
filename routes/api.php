@@ -4,8 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ServiceController;
-use App\Http\Controllers\Data\ContactImportController;
 use App\Http\Controllers\GoogleDriveController;
+use App\Http\Controllers\Data\DataDumpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +24,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('services', ServiceController::class);
+Route::apiResource('datadump', DataDumpController::class);
 
 Route::post('/drive/download', [GoogleDriveController::class, 'download']);
-Route::post('/import/google-drive', [ContactImportController::class, 'importFromGoogleDrive']);
+Route::post('/import/google-drive', [DataDumpController::class, 'importFromGoogleDrive']);
 
 use App\Http\Controllers\Api\CommandController;
 

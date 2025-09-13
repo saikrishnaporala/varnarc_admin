@@ -68,6 +68,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="data-dump" role="button">
+                        <i class="ri-service-fill"></i>@lang('translation.data-dump')
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="apps-offerings-services" role="button">
                         <i class="ri-service-fill"></i>@lang('translation.services')
                     </a>
