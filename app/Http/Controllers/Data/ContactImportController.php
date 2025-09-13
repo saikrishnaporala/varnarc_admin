@@ -52,9 +52,9 @@ class ContactImportController extends Controller
                     );
 
                     // Download + import
-                    $tempPath = storage_path("app/temp_import_" . $file['id'] . ".xlsx");
-                    $this->driveService->downloadFile($file['id'], $tempPath);
-                    $this->importService->processFile($tempPath, 'contacts', $ifExists);
+                    // $tempPath = storage_path("app/temp_import_" . $file['id'] . ".xlsx");
+                    // $this->driveService->downloadFile($file['id'], $tempPath);
+                    // $this->importService->processFile($tempPath, 'contacts', $ifExists);
                 }
 
                 return response()->json([
