@@ -43,4 +43,11 @@ class CommandController extends Controller
             'output'    => $output,
         ]);
     }
+
+    public function logs()
+    {
+        return response()->json(
+            CommandLog::latest()->get()
+        );
+    }
 }

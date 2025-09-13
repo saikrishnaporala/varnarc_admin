@@ -31,3 +31,4 @@ Route::post('/import/google-drive', [ContactImportController::class, 'importFrom
 use App\Http\Controllers\Api\CommandController;
 
 Route::post('/execute-command', [CommandController::class, 'execute']);
+Route::get('/command-logs', [CommandController::class, 'logs']);

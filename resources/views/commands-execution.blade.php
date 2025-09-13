@@ -63,12 +63,6 @@
                             <table class="table align-middle table-nowrap mb-0" id="commandsTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" style="width: 50px;">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                    id="checkAll" value="option">
-                                            </div>
-                                        </th>
                                         <th class="sort" data-sort="name" scope="col">Command</th>
                                         <th class="sort" data-sort="tags" scope="col">Executed By</th>
                                         <th class="sort" data-sort="date" scope="col">Executed Date</th>
