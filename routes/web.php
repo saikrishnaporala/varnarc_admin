@@ -57,6 +57,8 @@ Route::get('/test-encrypt', function () {
     }
 });
 
+Route::get('/memory', fn() => ini_get('memory_limit'));
+
 Route::get('/run-composer/{cmd}', function ($cmd) {
     if (request('key') !== env('APP_SECRET_KEY')) {
         abort(403, 'Unauthorized');
