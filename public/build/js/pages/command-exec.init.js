@@ -27,7 +27,7 @@ $(document).ready(function () {
     // Load commands into table
     function loadCommandLogs() {
         $.get('/api/command-logs', function(data) {
-            let tbody = $("#customerTable tbody");
+            let tbody = $("#commandsTable tbody");
             tbody.empty();
 
             if (data.length === 0) {
