@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use App\Models\CommandLog;
 
 class CommandController extends Controller
 {
@@ -12,19 +13,34 @@ class CommandController extends Controller
     {
         $table = $request->input('table');
 
-        // Example: run migrate for a specific table (or all if not provided)
         if ($table) {
-            $exitCode = Artisan::call('migrate', [
+            $command = 'migrate';
+            $params = [
                 '--path' => "database/migrations/{$table}.php",
                 '--force' => true,
-            ]);
+            ];
         } else {
-            $exitCode = Artisan::call('migrate', ['--force' => true]);
+            $command = 'migrate';
+            $params = ['--force' => true];
         }
 
+        $exitCode = Artisan::call($command, $params);
+        $output = Artisan::output();
+
+        // Store in DB
+        CommandLog::create([
+            'command'    => $command,
+            'parameters' => $params,
+            'exit_code'  => $exitCode,
+            'output'     => $output,
+            'user_id'    => auth()->id(), // optional
+        ]);
+
         return response()->json([
-            'output' => Artisan::output(),
-            'exitCode' => $exitCode,
+            'command'   => $command,
+            'params'    => $params,
+            'exitCode'  => $exitCode,
+            'output'    => $output,
         ]);
     }
 }

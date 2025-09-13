@@ -63,7 +63,12 @@
                     </div>
                 </li> 
                 <li class="nav-item">
-                    <a href="#sidebarOfferings" class="nav-link" href="apps-offerings-services" role="button">
+                    <a class="nav-link" href="commands-execution" role="button">
+                        <i class="ri-service-fill"></i><?php echo app('translator')->get('translation.commands'); ?>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="apps-offerings-services" role="button">
                         <i class="ri-service-fill"></i><?php echo app('translator')->get('translation.services'); ?>
                     </a>
                 </li>
