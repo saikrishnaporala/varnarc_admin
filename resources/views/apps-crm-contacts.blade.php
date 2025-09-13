@@ -262,7 +262,7 @@
         <div class="col-xxl-3">
             <div id="importMessage" class="mt-3"></div>
             {{-- Hidden Import Section (First Screenshot UI) --}}
-            <div class="card" id="importSection" style="display: none;">
+            <div class="card" id="importSection">
                 <div class="card-body">
 
                     {{-- Upload CSV/Excel --}}
