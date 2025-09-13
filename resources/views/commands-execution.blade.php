@@ -12,49 +12,37 @@
 @endsection
 @section('content')
     @component('components.breadcrumb')
-        @slot('li_1') CRM @endslot
-        @slot('title') Contacts @endslot
+        @slot('li_1') Commands @endslot
+        @slot('title') Execution @endslot
     @endcomponent
     <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex align-items-center flex-wrap gap-2">
-                        <div class="flex-grow-1">
-                            <button class="btn btn-info add-btn" data-bs-toggle="modal"
-                                data-bs-target="#showModal"><i
-                                    class="ri-add-fill me-1 align-bottom"></i> Add Contacts</button>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <div class="hstack text-nowrap gap-2">
-                                <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-                                <button class="btn btn-danger"><i
-                                        class="ri-filter-2-line me-1 align-bottom"></i> Filters</button>
-                                <button class="btn btn-soft-success" id="showImport">Import</button>
-                                <button type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown"
-                                    aria-expanded="false" class="btn btn-soft-info"><i
-                                        class="ri-more-2-fill"></i></button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                    <li><a class="dropdown-item" href="#">All</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Week</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Month</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Year</a></li>
-                                </ul>
+        <div class="col-xxl-3">
+            <div id="importMessage" class="mt-3"></div>
+            <div class="card" id="commands">
+                <div class="card-body">
+                    <h5>Command Execution</h5>
+                    <form method="POST" id="execCommand">
+                        @csrf
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <input type="text" name="table_name" class="form-control" placeholder="Table name (optional)">
                             </div>
                         </div>
-                    </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Execute Command</button>
+                    </form>
                 </div>
             </div>
         </div>
-        <!--end col-->
         <div class="col-xxl-9">
-            <div class="card" id="contactList">
+            <div class="card" id="commandsList">
                 <div class="card-header">
                     <div class="row g-3">
                         <div class="col-md-4">
                             <div class="search-box">
                                 <input type="text" class="form-control search"
-                                    placeholder="Search for contact...">
+                                    placeholder="Search with command...">
                                 <i class="ri-search-line search-icon"></i>
                             </div>
                         </div>
@@ -63,9 +51,8 @@
                                 <span class="text-muted">Sort by: </span>
                                 <select class="form-control mb-0" data-choices data-choices-search-false
                                     id="choices-single-default">
-                                    <option value="Name">Name</option>
-                                    <option value="Company">Company</option>
-                                    <option value="Lead">Lead</option>
+                                    <option value="Name">Command</option>
+                                    <option value="Company">Date</option>
                                 </select>
                             </div>
                         </div>
@@ -74,7 +61,7 @@
                 <div class="card-body">
                     <div>
                         <div class="table-responsive table-card mb-3">
-                            <table class="table align-middle table-nowrap mb-0" id="customerTable">
+                            <table class="table align-middle table-nowrap mb-0" id="commandsTable">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" style="width: 50px;">
@@ -83,17 +70,9 @@
                                                     id="checkAll" value="option">
                                             </div>
                                         </th>
-                                        <th class="sort" data-sort="name" scope="col">Name</th>
-                                        <th class="sort" data-sort="company_name" scope="col">Company
-                                        </th>
-                                        <!-- <th class="sort" data-sort="designation" scope="col">Designation
-                                        </th> -->
-                                        <th class="sort" data-sort="email_id" scope="col">Email ID</th>
-                                        <th class="sort" data-sort="phone" scope="col">Phone No</th>
-                                        <th class="sort" data-sort="lead_score" scope="col">Lead Score</th>
-                                        <th class="sort" data-sort="tags" scope="col">Tags</th>
-                                        <th class="sort" data-sort="date" scope="col">Last Contacted</th>
-                                        <th scope="col">Action</th>
+                                        <th class="sort" data-sort="name" scope="col">Command</th>
+                                        <th class="sort" data-sort="tags" scope="col">Executed By</th>
+                                        <th class="sort" data-sort="date" scope="col">Executed Date</th>
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
@@ -258,150 +237,7 @@
             </div>
             <!--end card-->
         </div>
-        <!--end col-->
-        <div class="col-xxl-3">
-            <div id="importMessage" class="mt-3"></div>
-            {{-- Hidden Import Section (First Screenshot UI) --}}
-            <div class="card" id="importSection" style="display: none;">
-                <div class="card-body">
-
-                    {{-- Upload CSV/Excel --}}
-                    <h5>Upload CSV / Excel</h5>
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="file" class="form-label">File</label>
-                            <input type="file" name="file" class="form-control" required>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <input type="text" name="table_name" class="form-control" placeholder="Table name (optional)">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <select name="if_exists" class="form-control">
-                                    <option value="append">Append</option>
-                                    <option value="replace">Replace</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">Import</button>
-                    </form>
-
-                    <hr>
-
-                    {{-- Import from URL --}}
-                    <h5>Import from URL</h5>
-                    <form method="POST" id="importurl">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="file_url" class="form-label">File URL (CSV/XLSX/XLS)</label>
-                            <input type="url" name="file_url" class="form-control" placeholder="https://..." required>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <input type="text" name="table_name" class="form-control" placeholder="Table name (optional)">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <select name="if_exists" class="form-control">
-                                    <option value="append">Append</option>
-                                    <option value="replace">Replace</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <select name="file_type" class="form-control">
-                                    <option value="auto">Auto</option>
-                                    <option value="csv">CSV</option>
-                                    <option value="xlsx">XLSX</option>
-                                    <option value="xls">XLS</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">Import</button>
-                    </form>
-
-                </div>
-            </div>
-            <div class="card" id="contact-view-detail">
-                <div class="card-body text-center">
-                    <div class="position-relative d-inline-block">
-                        <img src="{{ URL::asset('build/images/users/avatar-10.jpg') }}" alt=""
-                            class="avatar-lg rounded-circle img-thumbnail">
-                        <span class="contact-active position-absolute rounded-circle bg-success"><span
-                                class="visually-hidden"></span>
-                    </div>
-                    <h5 class="mt-4 mb-1">Tonya Noble</h5>
-                    <p class="text-muted">Nesta Technologies</p>
-
-                    <ul class="list-inline mb-0">
-                        <li class="list-inline-item avatar-xs">
-                            <a href="javascript:void(0);"
-                                class="avatar-title bg-success-subtle text-success fs-15 rounded">
-                                <i class="ri-phone-line"></i>
-                            </a>
-                        </li>
-                        <li class="list-inline-item avatar-xs">
-                            <a href="javascript:void(0);"
-                                class="avatar-title bg-danger-subtle text-danger fs-15 rounded">
-                                <i class="ri-mail-line"></i>
-                            </a>
-                        </li>
-                        <li class="list-inline-item avatar-xs">
-                            <a href="javascript:void(0);"
-                                class="avatar-title bg-warning-subtle text-warning fs-15 rounded">
-                                <i class="ri-question-answer-line"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-body">
-                    <h6 class="text-muted text-uppercase fw-semibold mb-3">Personal Information</h6>
-                    <p class="text-muted mb-4">Hello, I'm Tonya Noble, The most effective objective is
-                        one that is tailored to the job you are applying for. It states what kind of
-                        career you are seeking, and what skills and experiences.</p>
-                    <div class="table-responsive table-card">
-                        <table class="table table-borderless mb-0">
-                            <tbody>
-                                <tr>
-                                    <td class="fw-medium" scope="row">Designation</td>
-                                    <td>Lead Designer / Developer</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-medium" scope="row">Email ID</td>
-                                    <td>tonyanoble@velzon.com</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-medium" scope="row">Phone No</td>
-                                    <td>414-453-5725</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-medium" scope="row">Lead Score</td>
-                                    <td>154</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-medium" scope="row">Tags</td>
-                                    <td>
-                                        <span class="badge bg-primary-subtle text-primary">Lead</span>
-                                        <span class="badge bg-primary-subtle text-primary">Partner</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-medium" scope="row">Last Contacted</td>
-                                    <td>15 Dec, 2021 <small class="text-muted">08:58AM</small></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!--end card-->
-        </div>
-        <!--end col-->
     </div>
-    <!--end row-->
 @endsection
 @section('script')
     <script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>
