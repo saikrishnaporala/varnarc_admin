@@ -124,7 +124,7 @@ class DataDumpController extends Controller
 
             return response()->json([
                 'status'  => 'success',
-                'message' => "File {makeTableName($file->name)} imported successfully."
+                'message' => "File ".$this->makeTableName($file->name)." imported successfully."
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -152,7 +152,7 @@ class DataDumpController extends Controller
         return null;
     }
 
-    function makeTableName(string $filename): string
+    private function makeTableName(string $filename): string
     {
         // Remove extension
         $name = pathinfo($filename, PATHINFO_FILENAME);
