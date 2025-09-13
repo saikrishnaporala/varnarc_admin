@@ -52,29 +52,19 @@ $(document).ready(function () {
             }
             $(".noresult").hide();
 
-            data.forEach(contact => {
+            data.forEach(dump => {
                 tbody.append(`
                     <tr>
                         <td>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="chk_child" value="${contact.id}">
+                                <input class="form-check-input" type="checkbox" name="chk_child" value="${dump.id}">
                             </div>
                         </td>
-                        <td class="name">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <img src="${contact.image_url ?? '/build/images/users/user-dummy-img.jpg'}"
-                                        alt="" class="avatar-xs rounded-circle">
-                                </div>
-                                <div class="flex-grow-1 ms-2">${contact.name}</div>
-                            </div>
-                        </td>
-                        <td class="company_name">${contact.company_name ?? ''}</td>
-                        <td class="email_id">${contact.email}</td>
-                        <td class="phone">${contact.phone ?? ''}</td>
-                        <td class="lead_score">${contact.lead_score ?? ''}</td>
-                        <td class="tags">${contact.tags ?? ''}</td>
-                        <td class="date">${contact.updated_at ?? ''}</td>
+                        <td class="name">${dump.name ?? ''}</td>
+                        <td class="file_id">${dump.file_id}</td>
+                        <td class="mime">${dump.mime ?? ''}</td>
+                        <td class="size">${dump.size ?? ''}</td>
+                        <td class="url">${dump.url ?? ''}</td>
                         <td>
                             <div class="dropdown">
                                 <button class="btn btn-soft-secondary btn-sm dropdown" data-bs-toggle="dropdown">
