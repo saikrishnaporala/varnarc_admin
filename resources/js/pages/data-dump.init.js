@@ -62,8 +62,9 @@ $(document).ready(function () {
                         </td>
                         <td class="name">${dump.name ?? ''}</td>
                         <td class="mime">${getShortMime(dump.mime) ?? ''}</td>
-                        <td class="size">${dump.size ?? ''}</td>
-                        <td class="url"><a href="${dump.url ?? ''}" target="_blank">Open</a></td>
+                        <td class="file_id">${dump.file_id ?? ''}</td>
+                        <td class="status">${dump.status ?? ''}</td>
+                        <td class="table_name">${dump.table_name ?? ''}</td>
                         <td>
                             <div class="dropdown">
                                 <button class="btn btn-soft-secondary btn-sm dropdown" data-bs-toggle="dropdown">
@@ -72,12 +73,12 @@ $(document).ready(function () {
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item view-item-btn" href="javascript:void(0);" data-id="${dump.id}">
                                         <i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>
-                                    <li><a class="dropdown-item edit-item-btn" href="javascript:void(0);" data-id="${dump.id}">
-                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a></li>
+                                    <li><a class="dropdown-item edit-item-btn" href="${dump.url ?? ''}" target="_blank">
+                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Open</a></li>
                                     <li><a class="dropdown-item remove-item-btn" href="javascript:void(0);" data-id="${dump.id}">
                                         <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete</a></li>
                                     <li><a class="dropdown-item remove-item-btn" href="javascript:void(0);" data-id="${dump.id}">
-                                        <i class="ri-import-fill align-bottom me-2 text-muted"></i> Import</a></li>
+                                        <i class="ri-database-2-fill align-bottom me-2 text-muted"></i> Import</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -101,10 +102,6 @@ $(document).ready(function () {
         return map[mime] || mime; // fallback to full MIME if not mapped
     }
     
-    // Example usage
-    console.log(getShortMime("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")); // XLSX
-    console.log(getShortMime("text/csv"));
-
     loadDriveFiles();
 
     // Add or Update Contact

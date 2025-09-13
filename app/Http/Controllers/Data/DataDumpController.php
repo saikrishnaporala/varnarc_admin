@@ -54,6 +54,8 @@ class DataDumpController extends Controller
                             'mime' => $file['mime'],
                             'url'  => $file['url'],
                             'size' => $file['size'] ?? null,
+                            'status'     => 'pending',
+                            'table_name' => '',
                         ]
                     );
 
