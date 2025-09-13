@@ -113,14 +113,14 @@ class DataDumpController extends Controller
             // Find file record
             $file = DriveFile::findOrFail($id);
 
-            // // Download + import
-            // $tempPath = storage_path("app/temp_import_" . $file['id'] . ".xlsx");
-            // $this->driveService->downloadFile($file['id'], $tempPath);
-            // $this->importService->processFile($tempPath, $file->name, 'append');
+            // Download + import
+            $tempPath = storage_path("app/temp_import_" . $file['id'] . ".xlsx");
+            $this->driveService->downloadFile($file['id'], $tempPath);
+            $this->importService->processFile($tempPath, $this->makeTableName($file->name), 'append');
 
-            // // Mark file as imported
-            // $file->status = 'imported';
-            // $file->save();
+            // Mark file as imported
+            $file->status = 'imported';
+            $file->save();
 
             return response()->json([
                 'status'  => 'success',
@@ -131,6 +131,11 @@ class DataDumpController extends Controller
                 'status'  => 'error',
                 'message' => $e->getMessage(),
             ], 500);
+        }
+        finally {
+            if (file_exists($tempPath)) {
+                unlink($tempPath);
+            }
         }
     }
 
