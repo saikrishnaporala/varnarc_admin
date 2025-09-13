@@ -28,4 +28,36 @@ class GoogleDriveService
 
         return $tempPath;
     }
+
+    public function listFilesRecursive(string $folderId): array
+    {
+        $files = [];
+
+        $this->fetchFiles($folderId, $files);
+
+        return $files;
+    }
+
+    private function fetchFiles(string $folderId, array &$files): void
+    {
+        $response = $this->service->files->listFiles([
+            'q' => "'" . $folderId . "' in parents and trashed = false",
+            'fields' => 'files(id, name, mimeType)'
+        ]);
+
+        foreach ($response->files as $file) {
+            if ($file->mimeType === 'application/vnd.google-apps.folder') {
+                // Recursive call for subfolders
+                $this->fetchFiles($file->id, $files);
+            } else {
+                $files[] = [
+                    'id'   => $file->id,
+                    'name' => $file->name,
+                    'mime' => $file->mimeType,
+                    'url'  => "https://drive.google.com/file/d/{$file->id}/view", // ✅ add URL
+                ];
+            }
+        }
+    }
+    
 }
