@@ -64,27 +64,27 @@ class ContactImportController extends Controller
             } else {
                 // ✅ Single file
                 $fileId = $this->extractFileId($fileUrl);
-                $tempPath = storage_path("app/temp_import." . ($fileType === 'auto' ? 'xlsx' : $fileType));
+                // $tempPath = storage_path("app/temp_import." . ($fileType === 'auto' ? 'xlsx' : $fileType));
 
-                if ($fileId) {
-                    $this->driveService->downloadFile($fileId, $tempPath);
+                // if ($fileId) {
+                //     $this->driveService->downloadFile($fileId, $tempPath);
 
                     // Save metadata
-                    DriveFile::updateOrCreate(
-                        ['file_id' => $fileId],
-                        [
-                            'name' => basename($tempPath),
-                            'mime' => $fileType,
-                            'url'  => "https://drive.google.com/file/d/{$fileId}/view",
-                            'size' => $file['size'] ?? null,
-                        ]
-                    );
-                } else {
-                    $fileContent = file_get_contents($fileUrl);
-                    file_put_contents($tempPath, $fileContent);
-                }
+                    // DriveFile::updateOrCreate(
+                    //     ['file_id' => $fileId],
+                    //     [
+                    //         'name' => basename($tempPath),
+                    //         'mime' => $fileType,
+                    //         'url'  => "https://drive.google.com/file/d/{$fileId}/view",
+                    //         'size' => $file['size'] ?? null,
+                    //     ]
+                    // );
+                // } else {
+                //     $fileContent = file_get_contents($fileUrl);
+                //     file_put_contents($tempPath, $fileContent);
+                // }
 
-                $this->importService->processFile($tempPath, 'contacts', $ifExists);
+                // $this->importService->processFile($tempPath, 'contacts', $ifExists);
 
                 return response()->json([
                     'status'  => 'success',

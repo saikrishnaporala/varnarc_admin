@@ -42,7 +42,7 @@ class GoogleDriveService
     {
         $response = $this->service->files->listFiles([
             'q' => "'" . $folderId . "' in parents and trashed = false",
-            'fields' => 'files(id, name, mimeType)'
+            'fields' => 'files(id, name, mimeType, size)'
         ]);
 
         foreach ($response->files as $file) {
