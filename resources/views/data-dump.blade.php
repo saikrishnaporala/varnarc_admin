@@ -53,10 +53,6 @@
                                             </div>
                                         </th>
                                         <th class="sort" data-sort="name" scope="col">Name</th>
-                                        <th class="sort" data-sort="file_id" scope="col">File Id
-                                        </th>
-                                        <!-- <th class="sort" data-sort="designation" scope="col">Designation
-                                        </th> -->
                                         <th class="sort" data-sort="mime" scope="col">mime</th>
                                         <th class="sort" data-sort="size" scope="col">Size</th>
                                         <th class="sort" data-sort="url" scope="col">URL</th>

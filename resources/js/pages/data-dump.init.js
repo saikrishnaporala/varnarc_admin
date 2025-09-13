@@ -61,10 +61,9 @@ $(document).ready(function () {
                             </div>
                         </td>
                         <td class="name">${dump.name ?? ''}</td>
-                        <td class="file_id">${dump.file_id}</td>
-                        <td class="mime">${dump.mime ?? ''}</td>
+                        <td class="mime">${getShortMime(dump.mime) ?? ''}</td>
                         <td class="size">${dump.size ?? ''}</td>
-                        <td class="url">${dump.url ?? ''}</td>
+                        <td class="url"><a href="${dump.url ?? ''}" target="_blank">Open</a></td>
                         <td>
                             <div class="dropdown">
                                 <button class="btn btn-soft-secondary btn-sm dropdown" data-bs-toggle="dropdown">
@@ -87,6 +86,24 @@ $(document).ready(function () {
             });
         });
     }
+
+    function getShortMime(mime) {
+        const map = {
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "XLSX",
+            "application/vnd.ms-excel": "XLS",
+            "text/csv": "CSV",
+            "application/pdf": "PDF",
+            "application/vnd.google-apps.document": "Google Doc",
+            "application/vnd.google-apps.spreadsheet": "Google Sheet",
+            "application/vnd.google-apps.presentation": "Google Slide"
+        };
+    
+        return map[mime] || mime; // fallback to full MIME if not mapped
+    }
+    
+    // Example usage
+    console.log(getShortMime("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")); // XLSX
+    console.log(getShortMime("text/csv"));
 
     loadDriveFiles();
 
