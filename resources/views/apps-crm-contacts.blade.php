@@ -260,7 +260,7 @@
         </div>
         <!--end col-->
         <div class="col-xxl-3">
-            <div id="importMessage" class="mt-3"></div>
+            <div id="importMessage" class="mt-0"></div>
             {{-- Hidden Import Section (First Screenshot UI) --}}
             <div class="card" id="importSection">
                 <div class="card-body">
