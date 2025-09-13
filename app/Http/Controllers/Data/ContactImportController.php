@@ -47,6 +47,7 @@ class ContactImportController extends Controller
                             'name' => $file['name'],
                             'mime' => $file['mime'],
                             'url'  => $file['url'],
+                            'size' => $file['size'] ?? null,
                         ]
                     );
 
@@ -75,6 +76,7 @@ class ContactImportController extends Controller
                             'name' => basename($tempPath),
                             'mime' => $fileType,
                             'url'  => "https://drive.google.com/file/d/{$fileId}/view",
+                            'size' => $file['size'] ?? null,
                         ]
                     );
                 } else {

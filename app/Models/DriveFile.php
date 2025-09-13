@@ -16,5 +16,6 @@ class DriveFile extends Model
         'name',
         'mime',
         'url',
+        'size',
     ];
 }

@@ -55,6 +55,7 @@ class GoogleDriveService
                     'name' => $file->name,
                     'mime' => $file->mimeType,
                     'url'  => "https://drive.google.com/file/d/{$file->id}/view", // ✅ add URL
+                    'size' => isset($file->size) ? round($file->size / 1024, 2) : null, // ✅ size in bytes
                 ];
             }
         }
