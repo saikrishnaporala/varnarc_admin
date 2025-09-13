@@ -27,3 +27,7 @@ Route::apiResource('services', ServiceController::class);
 
 Route::post('/drive/download', [GoogleDriveController::class, 'download']);
 Route::post('/import/google-drive', [ContactImportController::class, 'importFromGoogleDrive']);
+
+use App\Http\Controllers\Api\CommandController;
+
+Route::post('/execute-command', [CommandController::class, 'execute']);

@@ -17,16 +17,15 @@
     @endcomponent
     <div class="row">
         <div class="col-xxl-3">
-            <div id="importMessage" class="mt-3"></div>
+            <div id="messages" class="mt-0"></div>
             <div class="card" id="commands">
                 <div class="card-body">
                     <h5>Command Execution</h5>
                     <form method="POST" id="execCommand">
                         @csrf
-
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <input type="text" name="table_name" class="form-control" placeholder="Table name (optional)">
+                                <input type="text" name="command_name" class="form-control" placeholder="Artisan Commands">
                             </div>
                         </div>
 
@@ -254,7 +253,7 @@
 
     <script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
 
-    <script src="{{ URL::asset('build/js/pages/crm-contact.init.js') }}"></script>
+    <script src="{{ URL::asset('build/js/pages/command-exec.init.js') }}"></script>
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
