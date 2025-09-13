@@ -71,12 +71,14 @@ $(document).ready(function () {
                                     <i class="ri-more-fill align-middle"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item view-item-btn" href="javascript:void(0);" data-id="${contact.id}">
+                                    <li><a class="dropdown-item view-item-btn" href="javascript:void(0);" data-id="${dump.id}">
                                         <i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>
-                                    <li><a class="dropdown-item edit-item-btn" href="javascript:void(0);" data-id="${contact.id}">
+                                    <li><a class="dropdown-item edit-item-btn" href="javascript:void(0);" data-id="${dump.id}">
                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a></li>
-                                    <li><a class="dropdown-item remove-item-btn" href="javascript:void(0);" data-id="${contact.id}">
+                                    <li><a class="dropdown-item remove-item-btn" href="javascript:void(0);" data-id="${dump.id}">
                                         <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete</a></li>
+                                    <li><a class="dropdown-item remove-item-btn" href="javascript:void(0);" data-id="${dump.id}">
+                                        <i class="ri-import-fill align-bottom me-2 text-muted"></i> Import</a></li>
                                 </ul>
                             </div>
                         </td>
