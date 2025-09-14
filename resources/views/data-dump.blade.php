@@ -18,7 +18,7 @@
             <div class="card">
                 <div class="card-body">
                     <div>
-                        <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                        {{-- <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                             <thead>
                                 <tr>
                                     <th scope="col" style="width: 10px;">
@@ -503,12 +503,12 @@
                                     </td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table> --}}
                         <div class="table-responsive table-card mb-3">
-                            <table class="table table-bordered dt-responsive nowrap table-striped align-middle" id="driveFilesTable" style="width:100%">
-                                <thead class="table-light">
+                            <table class="table table-bordered dt-responsive nowrap table-striped align-middle" id="example" style="width:100%">
+                                <thead>
                                     <tr>
-                                        <th scope="col" style="width: 50px;">
+                                        <th scope="col" style="width: 10px;">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
                                                     id="checkAll" value="option">
