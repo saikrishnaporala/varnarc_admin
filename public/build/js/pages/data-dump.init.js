@@ -99,12 +99,12 @@ $(document).ready(function () {
             $(".noresult").hide();
     
             // Destroy if already initialized
-            if ($.fn.DataTable.isDataTable("#example")) {
-                $("#example").DataTable().clear().destroy();
+            if ($.fn.DataTable.isDataTable("#driveFilesTable")) {
+                $("#driveFilesTable").DataTable().clear().destroy();
             }
     
             // Initialize DataTable
-            $("#example").DataTable({
+            $("#driveFilesTable").DataTable({
                 data: data,
                 columns: [
                     {

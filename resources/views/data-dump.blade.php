@@ -18,7 +18,7 @@
             <div class="card">
                 <div class="card-body">
                     <div>
-                        {{-- <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                        <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                             <thead>
                                 <tr>
                                     <th scope="col" style="width: 10px;">
@@ -503,9 +503,9 @@
                                     </td>
                                 </tr>
                             </tbody>
-                        </table> --}}
+                        </table>
                         <div class="table-responsive table-card mb-3">
-                            <table class="table table-bordered dt-responsive nowrap table-striped align-middle" id="example" style="width:100%">
+                            <table class="table table-bordered dt-responsive nowrap table-striped align-middle" id="driveFilesTable" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="width: 10px;">
