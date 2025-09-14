@@ -41,54 +41,128 @@ $(document).ready(function () {
     });
 
     // Load contacts into table
+    // function loadDriveFiles() {
+    //     $.get("/api/datadump", function (data) {
+    //         let tbody = $("#driveFilesTable tbody");
+    //         tbody.empty();
+
+    //         if (data.length === 0) {
+    //             $(".noresult").show();
+    //             return;
+    //         }
+    //         $(".noresult").hide();
+
+    //         data.forEach(dump => {
+    //             tbody.append(`
+    //                 <tr>
+    //                     <td>
+    //                         <div class="form-check">
+    //                             <input class="form-check-input" type="checkbox" name="chk_child" value="${dump.id}">
+    //                         </div>
+    //                     </td>
+    //                     <td class="name">${dump.name ?? ''}</td>
+    //                     <td class="mime">${getShortMime(dump.mime) ?? ''}</td>
+    //                     <td class="file_id">${dump.file_id ?? ''}</td>
+    //                     <td class="status">${dump.status ?? ''}</td>
+    //                     <td class="table_name">${dump.table_name ?? ''}</td>
+    //                     <td>
+    //                         <div class="dropdown">
+    //                             <button class="btn btn-soft-secondary btn-sm dropdown" data-bs-toggle="dropdown">
+    //                                 <i class="ri-more-fill align-middle"></i>
+    //                             </button>
+    //                             <ul class="dropdown-menu dropdown-menu-end">
+    //                                 <li><a class="dropdown-item view-item-btn" href="javascript:void(0);" data-id="${dump.id}">
+    //                                     <i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>
+    //                                 <li><a class="dropdown-item edit-item-btn" href="${dump.url ?? ''}" target="_blank">
+    //                                     <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Open</a></li>
+    //                                 ${dump.status !== 'imported' ? `
+    //                                     <li>
+    //                                         <a class="dropdown-item import-item-btn" href="javascript:void(0);" data-id="${dump.id}">
+    //                                             <i class="ri-database-2-fill align-bottom me-2 text-muted"></i> Import
+    //                                         </a>
+    //                                     </li>` : ''}
+    //                             </ul>
+    //                         </div>
+    //                     </td>
+    //                 </tr>
+    //             `);
+    //         });
+    //     });
+    // }
+
     function loadDriveFiles() {
         $.get("/api/datadump", function (data) {
-            let tbody = $("#driveFilesTable tbody");
-            tbody.empty();
-
             if (data.length === 0) {
                 $(".noresult").show();
                 return;
             }
             $(".noresult").hide();
-
-            data.forEach(dump => {
-                tbody.append(`
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="chk_child" value="${dump.id}">
-                            </div>
-                        </td>
-                        <td class="name">${dump.name ?? ''}</td>
-                        <td class="mime">${getShortMime(dump.mime) ?? ''}</td>
-                        <td class="file_id">${dump.file_id ?? ''}</td>
-                        <td class="status">${dump.status ?? ''}</td>
-                        <td class="table_name">${dump.table_name ?? ''}</td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-soft-secondary btn-sm dropdown" data-bs-toggle="dropdown">
-                                    <i class="ri-more-fill align-middle"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item view-item-btn" href="javascript:void(0);" data-id="${dump.id}">
-                                        <i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>
-                                    <li><a class="dropdown-item edit-item-btn" href="${dump.url ?? ''}" target="_blank">
-                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Open</a></li>
-                                    ${dump.status !== 'imported' ? `
+    
+            // Destroy if already initialized
+            if ($.fn.DataTable.isDataTable("#driveFilesTable")) {
+                $("#driveFilesTable").DataTable().clear().destroy();
+            }
+    
+            // Initialize DataTable
+            $("#driveFilesTable").DataTable({
+                data: data,
+                columns: [
+                    {
+                        data: "id",
+                        render: function (id, type, row) {
+                            return `
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="chk_child" value="${id}">
+                                </div>`;
+                        }
+                    },
+                    { data: "name", defaultContent: "" },
+                    { 
+                        data: "mime",
+                        render: function (mime) {
+                            return getShortMime(mime) ?? "";
+                        }
+                    },
+                    { data: "file_id", defaultContent: "" },
+                    { data: "status", defaultContent: "" },
+                    { data: "table_name", defaultContent: "" },
+                    {
+                        data: null,
+                        render: function (row) {
+                            return `
+                                <div class="dropdown">
+                                    <button class="btn btn-soft-secondary btn-sm dropdown" data-bs-toggle="dropdown">
+                                        <i class="ri-more-fill align-middle"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item import-item-btn" href="javascript:void(0);" data-id="${dump.id}">
-                                                <i class="ri-database-2-fill align-bottom me-2 text-muted"></i> Import
+                                            <a class="dropdown-item view-item-btn" href="javascript:void(0);" data-id="${row.id}">
+                                                <i class="ri-eye-fill align-bottom me-2 text-muted"></i> View
                                             </a>
-                                        </li>` : ''}
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                `);
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item edit-item-btn" href="${row.url ?? ''}" target="_blank">
+                                                <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Open
+                                            </a>
+                                        </li>
+                                        ${row.status !== 'imported' ? `
+                                            <li>
+                                                <a class="dropdown-item import-item-btn" href="javascript:void(0);" data-id="${row.id}">
+                                                    <i class="ri-database-2-fill align-bottom me-2 text-muted"></i> Import
+                                                </a>
+                                            </li>` : ""}
+                                    </ul>
+                                </div>`;
+                        }
+                    }
+                ],
+                responsive: true,
+                pageLength: 10, // show 10 rows per page
+                order: [[1, "asc"]] // default sort by name
             });
         });
     }
+    
 
     function getShortMime(mime) {
         const map = {
