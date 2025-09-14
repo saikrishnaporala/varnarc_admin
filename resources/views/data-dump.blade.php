@@ -17,29 +17,7 @@
     @endcomponent
     <div class="row">
         <div class="col-xxl-9">
-            <div class="card" id="contactList">
-                <div class="card-header">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="search-box">
-                                <input type="text" class="form-control search"
-                                    placeholder="Search for contact...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-auto ms-auto">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-                                <select class="form-control mb-0" data-choices data-choices-search-false
-                                    id="choices-single-default">
-                                    <option value="Name">Name</option>
-                                    <option value="Company">Company</option>
-                                    <option value="Lead">Lead</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="card">
                 <div class="card-body">
                     <div>
                         <div class="table-responsive table-card mb-3">
@@ -75,17 +53,6 @@
                                         did not find any
                                         contacts for you search.</p>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="#">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="#">
-                                    Next
-                                </a>
                             </div>
                         </div>
                     </div>
