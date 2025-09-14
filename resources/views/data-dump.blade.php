@@ -43,7 +43,7 @@
                 <div class="card-body">
                     <div>
                         <div class="table-responsive table-card mb-3">
-                            <table class="table align-middle table-nowrap mb-0" id="driveFilesTable">
+                            <table class="table table-bordered dt-responsive nowrap table-striped align-middle" id="driveFilesTable">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" style="width: 50px;">
