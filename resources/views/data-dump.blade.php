@@ -8,8 +8,6 @@
 <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 @endsection
-@section('css')
-@endsection
 @section('content')
     @component('components.breadcrumb')
         @slot('li_1') Data @endslot
@@ -38,9 +36,9 @@
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody class="list form-check-all">
+                                {{-- <tbody class="list form-check-all">
                                     
-                                </tbody>
+                                </tbody> --}}
                             </table>
                             <div class="noresult" style="display: none">
                                 <div class="text-center">

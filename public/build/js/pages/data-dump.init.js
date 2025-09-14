@@ -161,8 +161,7 @@ $(document).ready(function () {
                 order: [[1, "asc"]] // default sort by name
             });
         });
-    }
-    
+    }    
 
     function getShortMime(mime) {
         const map = {
