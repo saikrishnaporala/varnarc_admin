@@ -114,8 +114,8 @@ class DataDumpController extends Controller
             $file = DriveFile::findOrFail($id);
 
             // Download + import
-            $tempPath = storage_path("app/temp_import_" . $file['id'] . ".xlsx");
-            $this->driveService->downloadFile($file['id'], $tempPath);
+            $tempPath = storage_path("app/temp_import_" . $file['file_id'] . ".xlsx");
+            $this->driveService->downloadFile($file['file_id'], $tempPath);
             $this->importService->processFile($tempPath, $this->makeTableName($file->name), 'append');
 
             // Mark file as imported
@@ -130,6 +130,7 @@ class DataDumpController extends Controller
             return response()->json([
                 'status'  => 'error',
                 'message' => $e->getMessage(),
+                'fileid' => $file['file_id']
             ], 500);
         }
         finally {
