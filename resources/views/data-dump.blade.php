@@ -504,7 +504,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="table-responsive table-card mb-3">
+                        {{-- <div class="table-responsive table-card mb-3"> --}}
                             <table class="table table-bordered dt-responsive nowrap table-striped align-middle" id="driveFilesTable" style="width:100%">
                                 <thead>
                                     <tr>
@@ -538,7 +538,7 @@
                                         contacts for you search.</p>
                                 </div>
                             </div>
-                        </div>
+                        {{-- </div> --}}
                     </div>
                     
                     <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1"
