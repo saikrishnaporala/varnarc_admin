@@ -217,8 +217,24 @@ $(document).ready(function () {
             url: `/api/datadump/${importId}`,
             type: "Post",
             success: function () {
-                $("#deleteRecordModal").modal("hide");
-                loadContacts();
+                // ✅ update status in the same row
+                $row.find(".status").text("imported");
+
+                // ✅ optionally set table name if returned
+                if (response.table_name) {
+                    $row.find(".table_name").text(response.table_name);
+                }
+
+                // ✅ remove Import option (since already imported)
+                $row.find(".import-item-btn").closest("li").remove();
+                Toastify({
+                    text: "imported successfully!",
+                    duration: 3000,
+                    gravity: "top", // top or bottom
+                    position: "right", // left, center, right
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)"
+                }).showToast();
+                loadDriveFiles();
             },
             error: function (xhr) {
                 Swal.fire("Error", xhr.responseText, "error");
