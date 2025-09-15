@@ -19,15 +19,37 @@ class GoogleDriveService
 
     public function downloadFile(string $fileId, string $tempPath): string
     {
-        /** @var \GuzzleHttp\Psr7\Response $response */
-        $response = $this->service->files->get($fileId, ['alt' => 'media']);
+        try {
+            // First check the file type
+            $file = $this->service->files->get($fileId, ['fields' => 'mimeType']);
 
-        $content = $response->getBody()->getContents();
+            if ($file->getMimeType() === 'application/vnd.google-apps.spreadsheet') {
+                // ✅ Export Google Sheet to XLSX
+                $response = $this->service->files->export(
+                    $fileId,
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    ['alt' => 'media']
+                );
+            } else {
+                // ✅ Normal file download (Excel, CSV, etc.)
+                $response = $this->service->files->get($fileId, ['alt' => 'media']);
+            }
 
-        file_put_contents($tempPath, $content);
+            $content = $response->getBody()->getContents();
+            file_put_contents($tempPath, $content);
 
-        return $tempPath;
+            // Safety check: ensure it’s not HTML (like a Google login page)
+            $head = substr($content, 0, 200);
+            if (stripos($head, '<html') !== false) {
+                throw new \Exception("Google Drive returned HTML instead of file content. File may not be shared with the service account.");
+            }
+
+            return $tempPath;
+        } catch (\Exception $e) {
+            throw new \Exception("Google Drive download failed: " . $e->getMessage());
+        }
     }
+
 
     public function listFilesRecursive(string $folderId): array
     {
@@ -60,5 +82,4 @@ class GoogleDriveService
             }
         }
     }
-    
 }
