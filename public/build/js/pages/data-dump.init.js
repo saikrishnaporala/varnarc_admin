@@ -158,7 +158,13 @@ $(document).ready(function () {
                 ],
                 responsive: true,
                 pageLength: 10, // show 10 rows per page
-                order: [[1, "asc"]] // default sort by name
+                order: [[1, "asc"]], // default sort by name
+                // ✅ Highlight imported rows
+                createdRow: function (row, data) {
+                    if (data.status === "imported") {
+                        $(row).addClass("table-success"); // Bootstrap green background
+                    }
+                }
             });
         });
     }    
