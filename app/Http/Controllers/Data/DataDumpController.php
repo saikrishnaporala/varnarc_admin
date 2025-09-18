@@ -129,7 +129,8 @@ class DataDumpController extends Controller
 
             return response()->json([
                 'status'  => 'success',
-                'message' => "File ".$this->makeTableName($file->name)." imported successfully."
+                'message' => "File ".$this->makeTableName($file->name)." imported successfully.",
+                'path' => $tempPath
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -178,6 +179,6 @@ class DataDumpController extends Controller
         $name = trim($name, '_');
 
         // Convert to lowercase
-        return strtolower($name);
+        return strtolower("Data_".$name);
     }
 }

@@ -24,13 +24,11 @@ class GoogleDriveService
         if ($file->mimeType === 'application/vnd.google-apps.spreadsheet') {
             // ✅ Export Google Sheet as CSV
             $response = $this->service->files->export($fileId, 'text/csv', ['alt' => 'media']);
-            $content = $response->getBody()->getContents();
         } else {
             // ✅ Download regular files directly
             $response = $this->service->files->get($fileId, ['alt' => 'media']);
-            $content = $response->getBody()->getContents();
         }
-
+        $content = $response->getBody()->getContents();
         file_put_contents($tempPath, $content);
 
         return $tempPath;
