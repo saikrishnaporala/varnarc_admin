@@ -218,6 +218,7 @@ $(document).ready(function () {
     // Import contact
     let importId;
     $(document).on("click", ".import-item-btn", function () {
+        let $row = $(this).closest("tr"); // ✅ define the row
         importId = $(this).data("id");
         $.ajax({
             url: `/api/datadump/${importId}`,
