@@ -117,7 +117,7 @@ class DataDumpController extends Controller
             // Download + import
             $tempPath = storage_path("app/temp_import_" . $file['file_id'] . ".xlsx");
             $this->driveService->downloadFile($file['file_id'], $tempPath);
-            $this->importService->processFile($tempPath, $this->makeTableName($file->name), 'append');
+            // $this->importService->processFile($tempPath, $this->makeTableName($file->name), 'append');
 
             // $tempPath = storage_path("app/temp_import_" . $file['file_id'] . ".csv");
             // $downloadstat = $this->driveService->downloadFileAsCsv($file['file_id'], $tempPath);
