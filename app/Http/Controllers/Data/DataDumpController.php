@@ -131,7 +131,8 @@ class DataDumpController extends Controller
                 'status'  => 'success',
                 'message' => "File ".$this->makeTableName($file->name)." imported successfully.",
                 'path' => $tempPath,
-                'download' => $downloadstat
+                'download' => $downloadstat,
+                'table_name' => $this->makeTableName($file->name)
             ]);
         } catch (\Exception $e) {
             return response()->json([

@@ -223,7 +223,7 @@ $(document).ready(function () {
         $.ajax({
             url: `/api/datadump/${importId}`,
             type: "Post",
-            success: function () {
+            success: function (response) {
                 // ✅ update status in the same row
                 $row.find(".status").text("imported");
 
