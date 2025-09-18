@@ -17,6 +17,17 @@ class GoogleDriveService
         $this->service = new Drive($client);
     }
 
+    public function downloadFileAsCsv(string $fileId, string $tempPath): string
+    {
+        // Export Google Sheets as CSV
+        $response = $this->service->files->export($fileId, 'text/csv', ['alt' => 'media']);
+        $content = $response->getBody()->getContents();
+
+        file_put_contents($tempPath, $content);
+
+        return $tempPath;
+    }
+
     public function downloadFile(string $fileId, string $tempPath): string
     {
         try {
