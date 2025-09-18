@@ -115,12 +115,12 @@ class DataDumpController extends Controller
             $file = DriveFile::findOrFail($id);
 
             // Download + import
-            // $tempPath = storage_path("app/temp_import_" . $file['file_id'] . ".xlsx");
-            // $this->driveService->downloadFile($file['file_id'], $tempPath);
-            // $this->importService->processFile($tempPath, $this->makeTableName($file->name), 'append');
+            $tempPath = storage_path("app/temp_import_" . $file['file_id'] . ".xlsx");
+            $this->driveService->downloadFile($file['file_id'], $tempPath);
+            $this->importService->processFile($tempPath, $this->makeTableName($file->name), 'append');
 
-            $tempPath = storage_path("app/temp_import_" . $file['file_id'] . ".csv");
-            $downloadstat = $this->driveService->downloadFileAsCsv($file['file_id'], $tempPath);
+            // $tempPath = storage_path("app/temp_import_" . $file['file_id'] . ".csv");
+            // $downloadstat = $this->driveService->downloadFileAsCsv($file['file_id'], $tempPath);
             // $this->importService->processFile($tempPath, $this->makeTableName($file->name), 'append');
 
             // Mark file as imported
@@ -131,7 +131,7 @@ class DataDumpController extends Controller
                 'status'  => 'success',
                 'message' => "File ".$this->makeTableName($file->name)." imported successfully.",
                 'path' => $tempPath,
-                'download' => $downloadstat
+                // 'download' => $downloadstat
             ]);
         } catch (\Exception $e) {
             return response()->json([
