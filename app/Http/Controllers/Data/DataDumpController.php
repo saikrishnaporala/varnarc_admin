@@ -121,7 +121,7 @@ class DataDumpController extends Controller
 
             $tempPath = storage_path("app/temp_import_" . $file['file_id'] . ".csv");
             $downloadstat = $this->driveService->downloadFileAsCsv($file['file_id'], $tempPath);
-            $this->importService->processFile($tempPath, $this->makeTableName($file->name), 'append');
+            $processstat = $this->importService->processFile($tempPath, $this->makeTableName($file->name), 'append');
 
             // Mark file as imported
             $file->status = 'imported';
@@ -132,7 +132,8 @@ class DataDumpController extends Controller
                 'message' => "File ".$this->makeTableName($file->name)." imported successfully.",
                 'path' => $tempPath,
                 'download' => $downloadstat,
-                'table_name' => $this->makeTableName($file->name)
+                'table_name' => $this->makeTableName($file->name),
+                'process' => $processstat
             ]);
         } catch (\Exception $e) {
             return response()->json([

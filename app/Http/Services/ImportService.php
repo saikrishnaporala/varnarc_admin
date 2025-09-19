@@ -146,8 +146,9 @@ class ImportService
                 Schema::drop($tableName);
             }
 
+            $table_stat = "dummy";
             if (!Schema::hasTable($tableName)) {
-                Schema::create($tableName, function (Blueprint $table) use ($normalizedColumns) {
+                $table_stat = Schema::create($tableName, function (Blueprint $table) use ($normalizedColumns) {
                     $table->id();
                     foreach ($normalizedColumns as $col) {
                         $table->text($col)->nullable();
@@ -161,28 +162,28 @@ class ImportService
             $insertCount = 0;
             $chunkSize = 1000;
 
-            while (($row = fgetcsv($handle)) !== false) {
-                $data = [];
-                foreach ($normalizedColumns as $i => $col) {
-                    $data[$col] = $row[$i] ?? null;
-                }
+            // while (($row = fgetcsv($handle)) !== false) {
+            //     $data = [];
+            //     foreach ($normalizedColumns as $i => $col) {
+            //         $data[$col] = $row[$i] ?? null;
+            //     }
 
-                if (!empty(array_filter($data))) {
-                    $batch[] = $data;
-                }
+            //     if (!empty(array_filter($data))) {
+            //         $batch[] = $data;
+            //     }
 
-                if (count($batch) >= $chunkSize) {
-                    DB::table($tableName)->insert($batch);
-                    $insertCount += count($batch);
-                    $batch = [];
-                }
-            }
+            //     if (count($batch) >= $chunkSize) {
+            //         DB::table($tableName)->insert($batch);
+            //         $insertCount += count($batch);
+            //         $batch = [];
+            //     }
+            // }
 
-            // Insert remaining
-            if (!empty($batch)) {
-                DB::table($tableName)->insert($batch);
-                $insertCount += count($batch);
-            }
+            // // Insert remaining
+            // if (!empty($batch)) {
+            //     DB::table($tableName)->insert($batch);
+            //     $insertCount += count($batch);
+            // }
 
             fclose($handle);
 
@@ -192,7 +193,8 @@ class ImportService
 
             return [
                 'status' => 'success',
-                'message' => "Imported {$insertCount} rows into table `{$tableName}` successfully"
+                'message' => "Imported {$insertCount} rows into table `{$tableName}` successfully",
+                'table_stat' => $table_stat
             ];
         } catch (\Exception $e) {
             return [
