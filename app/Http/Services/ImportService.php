@@ -141,60 +141,60 @@ class ImportService
             }
             $normalizedColumns = $uniqueCols;
 
-            // // ✅ Handle table existence
-            // if (Schema::hasTable($tableName) && $ifExists === 'replace') {
-            //     Schema::drop($tableName);
-            // }
+            // ✅ Handle table existence
+            if (Schema::hasTable($tableName) && $ifExists === 'replace') {
+                Schema::drop($tableName);
+            }
 
-            // $table_stat = "dummy";
-            // if (!Schema::hasTable($tableName)) {
-            //     $table_stat = Schema::create($tableName, function (Blueprint $table) use ($normalizedColumns) {
-            //         $table->id();
-            //         foreach ($normalizedColumns as $col) {
-            //             $table->text($col)->nullable();
-            //         }
-            //         $table->timestamps();
-            //     });
-            // }
+            $table_stat = "dummy";
+            if (!Schema::hasTable($tableName)) {
+                $table_stat = Schema::create($tableName, function (Blueprint $table) use ($normalizedColumns) {
+                    $table->id();
+                    foreach ($normalizedColumns as $col) {
+                        $table->text($col)->nullable();
+                    }
+                    $table->timestamps();
+                });
+            }
 
-            // // ✅ Insert rows in chunks
-            // $batch = [];
-            // $insertCount = 0;
-            // $chunkSize = 1000;
+            // ✅ Insert rows in chunks
+            $batch = [];
+            $insertCount = 0;
+            $chunkSize = 1000;
 
-            // // while (($row = fgetcsv($handle)) !== false) {
-            // //     $data = [];
-            // //     foreach ($normalizedColumns as $i => $col) {
-            // //         $data[$col] = $row[$i] ?? null;
-            // //     }
+            while (($row = fgetcsv($handle)) !== false) {
+                $data = [];
+                foreach ($normalizedColumns as $i => $col) {
+                    $data[$col] = $row[$i] ?? null;
+                }
 
-            // //     if (!empty(array_filter($data))) {
-            // //         $batch[] = $data;
-            // //     }
+                if (!empty(array_filter($data))) {
+                    $batch[] = $data;
+                }
 
-            // //     if (count($batch) >= $chunkSize) {
-            // //         DB::table($tableName)->insert($batch);
-            // //         $insertCount += count($batch);
-            // //         $batch = [];
-            // //     }
-            // // }
+                if (count($batch) >= $chunkSize) {
+                    DB::table($tableName)->insert($batch);
+                    $insertCount += count($batch);
+                    $batch = [];
+                }
+            }
 
-            // // // Insert remaining
-            // // if (!empty($batch)) {
-            // //     DB::table($tableName)->insert($batch);
-            // //     $insertCount += count($batch);
-            // // }
+            // Insert remaining
+            if (!empty($batch)) {
+                DB::table($tableName)->insert($batch);
+                $insertCount += count($batch);
+            }
 
             fclose($handle);
 
-            // if ($insertCount === 0) {
-            //     throw new \Exception("No valid rows found to insert into {$tableName}");
-            // }
+            if ($insertCount === 0) {
+                throw new \Exception("No valid rows found to insert into {$tableName}");
+            }
 
             return [
                 'status' => 'success',
-                // 'message' => "Imported {$insertCount} rows into table `{$tableName}` successfully",
-                'table_stat' => json_encode($columns)
+                'message' => "Imported {$insertCount} rows into table `{$tableName}` successfully",
+                'table_stat' => $table_stat
             ];
         } catch (\Exception $e) {
             return [

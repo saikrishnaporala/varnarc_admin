@@ -124,8 +124,8 @@ class DataDumpController extends Controller
             $processstat = $this->importService->processFile($tempPath, $this->makeTableName($file->name), 'append');
 
             // Mark file as imported
-            // $file->status = 'imported';
-            // $file->save();
+            $file->status = 'imported';
+            $file->save();
 
             return response()->json([
                 'status'  => 'success',
