@@ -18,33 +18,35 @@ class GoogleDriveService
     }
 
     public function downloadFileAsCsv(string $fileId, string $tempPath): string
-    {
-        $file = $this->service->files->get($fileId, ['fields' => 'id, name, mimeType']);
+{
+    $file = $this->service->files->get($fileId, ['fields' => 'id, name, mimeType']);
 
-        if ($file->mimeType === 'application/vnd.google-apps.spreadsheet') {
-            // ✅ Export Google Sheet as CSV
-            $response = $this->service->files->export($fileId, 'text/csv', ['alt' => 'media']);
-        } else {
-            // ✅ Download regular files directly
+    if ($file->mimeType === 'application/vnd.google-apps.spreadsheet') {
+        // ✅ Export Google Sheet as CSV
+        $response = $this->service->files->export($fileId, 'text/csv');
+    } else {
+        // ✅ If it’s already CSV, just download
+        if ($file->mimeType === 'text/csv') {
             $response = $this->service->files->get($fileId, ['alt' => 'media']);
+        } else {
+            throw new \Exception("Unsupported file type: {$file->mimeType}. Only Google Sheets or CSV allowed.");
         }
-
-        // Get raw content
-        $content = $response->getBody()->getContents();
-
-        // ✅ Normalize encoding → UTF-8 without BOM
-        $encoding = mb_detect_encoding($content, ['UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1'], true);
-        if ($encoding !== 'UTF-8') {
-            $content = mb_convert_encoding($content, 'UTF-8', $encoding ?: 'UTF-8');
-        }
-
-        // ✅ Remove BOM if present
-        $content = preg_replace('/^\xEF\xBB\xBF/', '', $content);
-
-        file_put_contents($tempPath, $content);
-
-        return $tempPath;
     }
+
+    $content = $response->getBody()->getContents();
+
+    // ✅ Convert encoding → UTF-8 clean
+    $encoding = mb_detect_encoding($content, ['UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1'], true);
+    if ($encoding !== 'UTF-8') {
+        $content = mb_convert_encoding($content, 'UTF-8', $encoding ?: 'UTF-8');
+    }
+    $content = preg_replace('/^\xEF\xBB\xBF/', '', $content);
+
+    file_put_contents($tempPath, $content);
+
+    return $tempPath;
+}
+
 
     public function downloadFile(string $fileId, string $tempPath): string
     {
