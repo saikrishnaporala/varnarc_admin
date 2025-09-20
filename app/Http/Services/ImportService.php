@@ -194,7 +194,7 @@ class ImportService
             return [
                 'status' => 'success',
                 // 'message' => "Imported {$insertCount} rows into table `{$tableName}` successfully",
-                'table_stat' => $normalizedColumns
+                'table_stat' => $columns
             ];
         } catch (\Exception $e) {
             return [
