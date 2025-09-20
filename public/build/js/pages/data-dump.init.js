@@ -120,7 +120,8 @@ $(document).ready(function () {
                     { 
                         data: "mime",
                         render: function (mime) {
-                            return getShortMime(mime) ?? "";
+                            // return getShortMime(mime) ?? "";
+                            return mime;
                         }
                     },
                     { data: "file_id", defaultContent: "" },
