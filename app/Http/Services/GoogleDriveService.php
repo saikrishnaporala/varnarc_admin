@@ -62,6 +62,65 @@ class GoogleDriveService
         return $tempPath;
     }
 
+    // public function downloadFileAsCsv(string $fileId, string $tempPath): string
+    // {
+    //     try {
+    //         // Get file metadata
+    //         $file = $this->service->files->get($fileId, ['fields' => 'id, name, mimeType']);
+
+    //         // Decide how to fetch the file
+    //         switch ($file->mimeType) {
+    //             case 'application/vnd.google-apps.spreadsheet':
+    //                 // Export Google Sheet as CSV
+    //                 $response = $this->service->files->export($fileId, 'text/csv');
+    //                 $extension = '.csv';
+    //                 break;
+
+    //             case 'text/csv':
+    //                 // Download CSV directly
+    //                 $response = $this->service->files->get($fileId, ['alt' => 'media']);
+    //                 $extension = '.csv';
+    //                 break;
+
+    //             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': // XLSX
+    //             case 'application/vnd.ms-excel': // XLS
+    //                 // Download Excel file
+    //                 $response = $this->service->files->get($fileId, ['alt' => 'media']);
+    //                 $extension = '.xlsx';
+    //                 break;
+
+    //             default:
+    //                 throw new \Exception("Unsupported file type: {$file->mimeType}");
+    //         }
+
+    //         // Read response
+    //         $content = $response->getBody()->getContents();
+    //         if (empty($content)) {
+    //             throw new \Exception("Downloaded file is empty or corrupted for file ID: {$fileId}");
+    //         }
+
+    //         // Ensure directory exists
+    //         $dir = dirname($tempPath);
+    //         if (!is_dir($dir)) {
+    //             mkdir($dir, 0777, true);
+    //         }
+
+    //         // Write file to disk
+    //         $finalPath = $tempPath . $extension;
+    //         file_put_contents($finalPath, $content);
+
+    //         return $finalPath;
+
+    //     } catch (\Google\Service\Exception $e) {
+    //         // Specific Google API errors
+    //         throw new \Exception("Google API error while downloading file {$fileId}: " . $e->getMessage(), $e->getCode(), $e);
+    //     } catch (\Exception $e) {
+    //         // General errors
+    //         throw new \Exception("Failed to download file {$fileId}: " . $e->getMessage(), $e->getCode(), $e);
+    //     }
+    // }
+
+
 
     public function downloadFile(string $fileId, string $tempPath): string
     {
