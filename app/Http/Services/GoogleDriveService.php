@@ -18,34 +18,49 @@ class GoogleDriveService
     }
 
     public function downloadFileAsCsv(string $fileId, string $tempPath): string
-{
-    $file = $this->service->files->get($fileId, ['fields' => 'id, name, mimeType']);
+    {
+        $file = $this->service->files->get($fileId, ['fields' => 'id, name, mimeType']);
 
-    if ($file->mimeType === 'application/vnd.google-apps.spreadsheet') {
-        // ✅ Export Google Sheet as CSV
-        $response = $this->service->files->export($fileId, 'text/csv');
-    } else {
-        // ✅ If it’s already CSV, just download
-        if ($file->mimeType === 'text/csv') {
-            $response = $this->service->files->get($fileId, ['alt' => 'media']);
-        } else {
-            throw new \Exception("Unsupported file type: {$file->mimeType}. Only Google Sheets or CSV allowed.");
+        switch ($file->mimeType) {
+            case 'application/vnd.google-apps.spreadsheet':
+                // ✅ Export Google Sheets as CSV
+                $response = $this->service->files->export($fileId, 'text/csv');
+                $extension = '.csv';
+                break;
+
+            case 'text/csv':
+                // ✅ Download CSV file directly
+                $response = $this->service->files->get($fileId, ['alt' => 'media']);
+                $extension = '.csv';
+                break;
+
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': // XLSX
+            case 'application/vnd.ms-excel': // XLS
+                // ✅ Download Excel file directly
+                $response = $this->service->files->get($fileId, ['alt' => 'media']);
+                $extension = '.xlsx';
+                break;
+
+            default:
+                throw new \Exception("Unsupported file type: {$file->mimeType}");
         }
+
+        $content = $response->getBody()->getContents();
+
+        // ✅ Normalize encoding only for text-based files
+        if ($extension === '.csv') {
+            $encoding = mb_detect_encoding($content, ['UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1'], true);
+            if ($encoding !== 'UTF-8') {
+                $content = mb_convert_encoding($content, 'UTF-8', $encoding ?: 'UTF-8');
+            }
+            $content = preg_replace('/^\xEF\xBB\xBF/', '', $content);
+        }
+
+        $tempPath = $tempPath . $extension;
+        file_put_contents($tempPath, $content);
+
+        return $tempPath;
     }
-
-    $content = $response->getBody()->getContents();
-
-    // ✅ Convert encoding → UTF-8 clean
-    $encoding = mb_detect_encoding($content, ['UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1'], true);
-    if ($encoding !== 'UTF-8') {
-        $content = mb_convert_encoding($content, 'UTF-8', $encoding ?: 'UTF-8');
-    }
-    $content = preg_replace('/^\xEF\xBB\xBF/', '', $content);
-
-    file_put_contents($tempPath, $content);
-
-    return $tempPath;
-}
 
 
     public function downloadFile(string $fileId, string $tempPath): string
