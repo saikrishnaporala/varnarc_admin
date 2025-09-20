@@ -194,7 +194,7 @@ class ImportService
             return [
                 'status' => 'success',
                 'message' => "Imported {$insertCount} rows into table `{$tableName}` successfully",
-                'table_stat' => $table_stat
+                'table_stat' => json_encode($table_stat)
             ];
         } catch (\Exception $e) {
             return [
