@@ -28,7 +28,19 @@ class GoogleDriveService
             // ✅ Download regular files directly
             $response = $this->service->files->get($fileId, ['alt' => 'media']);
         }
+
+        // Get raw content
         $content = $response->getBody()->getContents();
+
+        // ✅ Normalize encoding → UTF-8 without BOM
+        $encoding = mb_detect_encoding($content, ['UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1'], true);
+        if ($encoding !== 'UTF-8') {
+            $content = mb_convert_encoding($content, 'UTF-8', $encoding ?: 'UTF-8');
+        }
+
+        // ✅ Remove BOM if present
+        $content = preg_replace('/^\xEF\xBB\xBF/', '', $content);
+
         file_put_contents($tempPath, $content);
 
         return $tempPath;
