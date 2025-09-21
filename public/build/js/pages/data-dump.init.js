@@ -146,12 +146,12 @@ $(document).ready(function () {
                                                 <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Open
                                             </a>
                                         </li>
-                                        ${row.status !== 'imported' ? `
+                                        
                                             <li>
                                                 <a class="dropdown-item import-item-btn" href="javascript:void(0);" data-id="${row.id}">
                                                     <i class="ri-database-2-fill align-bottom me-2 text-muted"></i> Import
                                                 </a>
-                                            </li>` : ""}
+                                            </li>
                                     </ul>
                                 </div>`;
                         }
