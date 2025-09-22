@@ -27,71 +27,95 @@ class DataDumpController extends Controller
         return response()->json(DriveFile::all());
     }
 
-    public function importFromGoogleDrive($folderId)
+    public function importFromGoogleDrive(Request $request)
     {
-        $files = $this->driveService->listFilesRecursive($folderId);
-        $imported = [];
+        ini_set('memory_limit', '512M');
 
-        // foreach ($files as $file) {
-        //     try {
-        //         if (!in_array($file['mime'], [
-        //             'application/vnd.ms-excel',
-        //             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        //             'text/csv'
-        //         ])) {
-        //             continue; // skip PDFs or unsupported
-        //         }
+        $request->validate([
+            'file_url'   => 'required|url',
+            'if_exists'  => 'nullable|in:append,replace',
+            'file_type'  => 'nullable|string|in:auto,csv,xlsx,xls',
+        ]);
 
-        //         // ✅ Download file locally
-        //         $tempPath = storage_path("app/temp_{$file['id']}");
-        //         $downloadedPath = $this->driveService->downloadFile($file['id'], $tempPath);
+        try {
+            $ifExists = $request->if_exists ?? 'append';
+            $fileType = $request->file_type ?? 'auto';
+            $fileUrl  = $request->file_url;
 
-        //         // ✅ If XLSX → convert to CSV
-        //         if (in_array($file['mime'], [
-        //             'application/vnd.ms-excel',
-        //             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        //         ])) {
-        //             $csvPath = $this->convertXlsxToCsv($downloadedPath);
-        //             $downloadedPath = $csvPath;
-        //         }
+            // ✅ Check if folder
+            if (str_contains($fileUrl, '/folders/')) {
+                $folderId = $this->extractFolderId($fileUrl);
+                $files = $this->driveService->listFilesRecursive($folderId);
+                $imported = [];
 
-        //         // ✅ Generate table name
-        //         $tableName = $this->makeTableName($file['name']);
+                // foreach ($files as $file) {
+                //     try {
+                //         if (!in_array($file['mime'], [
+                //             'application/vnd.ms-excel',
+                //             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                //             'text/csv'
+                //         ])) {
+                //             continue; // skip PDFs or unsupported
+                //         }
 
-        //         // ✅ Import file into DB
-        //         $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
+                //         // ✅ Download file locally
+                //         $tempPath = storage_path("app/temp_{$file['id']}");
+                //         $downloadedPath = $this->driveService->downloadFile($file['id'], $tempPath);
 
-        //         // ✅ Mark success
-        //         DriveFile::updateOrCreate(
-        //             ['file_id' => $file['id']],
-        //             [
-        //                 'name' => $file['name'],
-        //                 'url' => "https://drive.google.com/file/d/{$file['id']}/view",
-        //                 'mime' => $file['mime'],
-        //                 'status' => 'imported',
-        //                 'table_name' => $tableName,
-        //                 'size' => $file['size'] ?? null,
-        //                 'rows' => $file['rows'] ?? null,
-        //             ]
-        //         );
+                //         // ✅ If XLSX → convert to CSV
+                //         if (in_array($file['mime'], [
+                //             'application/vnd.ms-excel',
+                //             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                //         ])) {
+                //             $csvPath = $this->convertXlsxToCsv($downloadedPath);
+                //             $downloadedPath = $csvPath;
+                //         }
 
-        //         $imported[] = $file['name'];
-        //         unlink($downloadedPath); // cleanup
+                //         // ✅ Generate table name
+                //         $tableName = $this->makeTableName($file['name']);
 
-        //     } catch (\Exception $e) {
-        //         // ✅ Log failed file
-        //         DriveFile::updateOrCreate(
-        //             ['file_id' => $file['id']],
-        //             [
-        //                 'name' => $file['name'],
-        //                 'url' => "https://drive.google.com/file/d/{$file['id']}/view",
-        //                 'mime' => $file['mime'],
-        //                 'status' => 'error: ' . $e->getMessage(),
-        //             ]
-        //         );
-        //     }
-        // }
+                //         // ✅ Import file into DB
+                //         $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
 
+                //         // ✅ Mark success
+                //         DriveFile::updateOrCreate(
+                //             ['file_id' => $file['id']],
+                //             [
+                //                 'name' => $file['name'],
+                //                 'url' => "https://drive.google.com/file/d/{$file['id']}/view",
+                //                 'mime' => $file['mime'],
+                //                 'status' => 'imported',
+                //                 'table_name' => $tableName,
+                //                 'size' => $file['size'] ?? null,
+                //                 'rows' => $file['rows'] ?? null,
+                //             ]
+                //         );
+
+                //         $imported[] = $file['name'];
+                //         unlink($downloadedPath); // cleanup
+
+                //     } catch (\Exception $e) {
+                //         // ✅ Log failed file
+                //         DriveFile::updateOrCreate(
+                //             ['file_id' => $file['id']],
+                //             [
+                //                 'name' => $file['name'],
+                //                 'url' => "https://drive.google.com/file/d/{$file['id']}/view",
+                //                 'mime' => $file['mime'],
+                //                 'status' => 'error: ' . $e->getMessage(),
+                //             ]
+                //         );
+                //     }
+                // }
+            } else {
+                $fileId = $this->extractFileId($fileUrl);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => "test : " . $e->getMessage(),
+            ], 500);
+        }
         return response()->json([
             'status' => 'success',
             'message' => count($imported) . " files imported",
@@ -133,87 +157,87 @@ class DataDumpController extends Controller
         return substr($table, 0, 64); // MySQL table name length limit
     }
 
-    // public function importFromGoogleDrive(Request $request)
-    // {
-    //     ini_set('memory_limit', '512M');
+    public function importFromGoogleDrive_old(Request $request)
+    {
+        ini_set('memory_limit', '512M');
 
-    //     $request->validate([
-    //         'file_url'   => 'required|url',
-    //         'if_exists'  => 'nullable|in:append,replace',
-    //         'file_type'  => 'nullable|string|in:auto,csv,xlsx,xls',
-    //     ]);
+        $request->validate([
+            'file_url'   => 'required|url',
+            'if_exists'  => 'nullable|in:append,replace',
+            'file_type'  => 'nullable|string|in:auto,csv,xlsx,xls',
+        ]);
 
-    //     try {
-    //         $ifExists = $request->if_exists ?? 'append';
-    //         $fileType = $request->file_type ?? 'auto';
-    //         $fileUrl  = $request->file_url;
+        try {
+            $ifExists = $request->if_exists ?? 'append';
+            $fileType = $request->file_type ?? 'auto';
+            $fileUrl  = $request->file_url;
 
-    //         // ✅ Check if folder
-    //         if (str_contains($fileUrl, '/folders/')) {
-    //             $folderId = $this->extractFolderId($fileUrl);
-    //             $files = $this->driveService->listFilesRecursive($folderId);
+            // ✅ Check if folder
+            if (str_contains($fileUrl, '/folders/')) {
+                $folderId = $this->extractFolderId($fileUrl);
+                $files = $this->driveService->listFilesRecursive($folderId);
 
-    //             foreach ($files as $file) {
-    //                 // Save metadata to DB
-    //                 DriveFile::updateOrCreate(
-    //                     ['file_id' => $file['id']],
-    //                     [
-    //                         'name' => $file['name'],
-    //                         'mime' => $file['mime'],
-    //                         'url'  => $file['url'],
-    //                         'size' => $file['size'] ?? null,
-    //                         'status'     => 'pending',
-    //                         'table_name' => '',
-    //                     ]
-    //                 );
+                foreach ($files as $file) {
+                    // Save metadata to DB
+                    DriveFile::updateOrCreate(
+                        ['file_id' => $file['id']],
+                        [
+                            'name' => $file['name'],
+                            'mime' => $file['mime'],
+                            'url'  => $file['url'],
+                            'size' => $file['size'] ?? null,
+                            'status'     => 'pending',
+                            'table_name' => '',
+                        ]
+                    );
 
-    //                 // Download + import
-    //                 // $tempPath = storage_path("app/temp_import_" . $file['id'] . ".xlsx");
-    //                 // $this->driveService->downloadFile($file['id'], $tempPath);
-    //                 // $this->importService->processFile($tempPath, 'contacts', $ifExists);
-    //             }
+                    // Download + import
+                    // $tempPath = storage_path("app/temp_import_" . $file['id'] . ".xlsx");
+                    // $this->driveService->downloadFile($file['id'], $tempPath);
+                    // $this->importService->processFile($tempPath, 'contacts', $ifExists);
+                }
 
-    //             return response()->json([
-    //                 'status'  => 'success',
-    //                 'message' => "Imported " . count($files) . " files from folder",
-    //             ]);
-    //         } else {
-    //             // ✅ Single file
-    //             $fileId = $this->extractFileId($fileUrl);
-    //             // $tempPath = storage_path("app/temp_import." . ($fileType === 'auto' ? 'xlsx' : $fileType));
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => "Imported " . count($files) . " files from folder",
+                ]);
+            } else {
+                // ✅ Single file
+                $fileId = $this->extractFileId($fileUrl);
+                // $tempPath = storage_path("app/temp_import." . ($fileType === 'auto' ? 'xlsx' : $fileType));
 
-    //             // if ($fileId) {
-    //             //     $this->driveService->downloadFile($fileId, $tempPath);
+                // if ($fileId) {
+                //     $this->driveService->downloadFile($fileId, $tempPath);
 
-    //             // Save metadata
-    //             // DriveFile::updateOrCreate(
-    //             //     ['file_id' => $fileId],
-    //             //     [
-    //             //         'name' => basename($tempPath),
-    //             //         'mime' => $fileType,
-    //             //         'url'  => "https://drive.google.com/file/d/{$fileId}/view",
-    //             //         'size' => $file['size'] ?? null,
-    //             //     ]
-    //             // );
-    //             // } else {
-    //             //     $fileContent = file_get_contents($fileUrl);
-    //             //     file_put_contents($tempPath, $fileContent);
-    //             // }
+                // Save metadata
+                // DriveFile::updateOrCreate(
+                //     ['file_id' => $fileId],
+                //     [
+                //         'name' => basename($tempPath),
+                //         'mime' => $fileType,
+                //         'url'  => "https://drive.google.com/file/d/{$fileId}/view",
+                //         'size' => $file['size'] ?? null,
+                //     ]
+                // );
+                // } else {
+                //     $fileContent = file_get_contents($fileUrl);
+                //     file_put_contents($tempPath, $fileContent);
+                // }
 
-    //             // $this->importService->processFile($tempPath, 'contacts', $ifExists);
+                // $this->importService->processFile($tempPath, 'contacts', $ifExists);
 
-    //             return response()->json([
-    //                 'status'  => 'success',
-    //                 'message' => "Data imported successfully!",
-    //             ]);
-    //         }
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status'  => 'error',
-    //             'message' => "test : " . $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => "Data imported successfully!",
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => "test : " . $e->getMessage(),
+            ], 500);
+        }
+    }
 
     public function import($id)
     {
