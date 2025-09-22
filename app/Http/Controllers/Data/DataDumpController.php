@@ -148,9 +148,9 @@ class DataDumpController extends Controller
             $reader->setReadDataOnly(true);
             $reader->setReadEmptyCells(false); // save memory
             $spreadsheet = $reader->load($filePath);
-
+            
             $csvPath = $filePath . ".csv";
-
+            Log::info("Loaded XLSX → CSV conversion for file: {$csvPath}");
             $writer = new Csv($spreadsheet);
             $writer->setDelimiter(',');
             $writer->setEnclosure('"');
