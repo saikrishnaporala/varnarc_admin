@@ -140,22 +140,37 @@ class DataDumpController extends Controller
      */
     private function convertXlsxToCsv(string $filePath): string
     {
-        $reader = IOFactory::createReaderForFile($filePath);
-        $reader->setReadDataOnly(true);
-        $spreadsheet = $reader->load($filePath);
-        $sheet = $spreadsheet->getActiveSheet();
+        try {
+            Log::info("Starting XLSX → CSV conversion for file: {$filePath}");
 
-        $csvPath = $filePath . ".csv";
-        $writer = IOFactory::createWriter($spreadsheet, 'Csv');
-        // setDelimiter and setEnclosure are not available on PhpSpreadsheet\Writer\Csv via IOFactory
-        // So we need to cast to the correct class before calling them
-        if ($writer instanceof Csv) {
+            // Use Xlsx reader directly for large files
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $reader->setReadEmptyCells(false); // save memory
+            $spreadsheet = $reader->load($filePath);
+
+            $csvPath = $filePath . ".csv";
+
+            $writer = new Csv($spreadsheet);
             $writer->setDelimiter(',');
             $writer->setEnclosure('"');
-        }
-        $writer->save($csvPath);
+            $writer->setSheetIndex(0); // first sheet only
+            $writer->save($csvPath);
 
-        return $csvPath;
+            // Free memory
+            $spreadsheet->disconnectWorksheets();
+            unset($spreadsheet);
+
+            Log::info("Conversion successful. CSV saved to: {$csvPath}");
+            return $csvPath;
+
+        } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+            Log::error("PhpSpreadsheet read error: " . $e->getMessage());
+            throw new \Exception("Failed to convert XLSX to CSV: " . $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error("Conversion error: " . $e->getMessage());
+            throw new \Exception("Failed to convert XLSX to CSV: " . $e->getMessage());
+        }
     }
 
     /**
