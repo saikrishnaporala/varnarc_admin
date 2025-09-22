@@ -120,35 +120,35 @@ class GoogleDriveService
     //     }
     // }
 
-    public function downloadFile(string $fileId, string $savePath): string
-    {
-        try {
-            // Open a local file handle for writing
-            $fh = fopen($savePath, 'w');
+    // public function downloadFile(string $fileId, string $savePath): string
+    // {
+    //     try {
+    //         // Open a local file handle for writing
+    //         $fh = fopen($savePath, 'w');
 
-            // Download the file content from Google Drive into the local file
-            $this->service->files->get(
-                $fileId,
-                ['alt' => 'media'],
-                ['sink' => $fh]
-            );
+    //         // Download the file content from Google Drive into the local file
+    //         $this->service->files->get(
+    //             $fileId,
+    //             ['alt' => 'media'],
+    //             ['sink' => $fh]
+    //         );
 
-            fclose($fh);
+    //         fclose($fh);
 
-            return $savePath;
-        } catch (\Google\Service\Exception $e) {
-            // Catch Google API exceptions
-            return "Google Drive API error: " . $e->getMessage();
-            // throw new \Exception("Google Drive API error: " . $e->getMessage());
-        } catch (\Exception $e) {
-            // Catch any other exceptions
-            return "Failed to download file: " . $e->getMessage();
-            // throw new \Exception("Failed to download file: " . $e->getMessage());
-        }
-    }
+    //         return $savePath;
+    //     } catch (\Google\Service\Exception $e) {
+    //         // Catch Google API exceptions
+    //         return "Google Drive API error: " . $e->getMessage();
+    //         // throw new \Exception("Google Drive API error: " . $e->getMessage());
+    //     } catch (\Exception $e) {
+    //         // Catch any other exceptions
+    //         return "Failed to download file: " . $e->getMessage();
+    //         // throw new \Exception("Failed to download file: " . $e->getMessage());
+    //     }
+    // }
 
 
-    public function downloadFile_old(string $fileId, string $tempPath): string
+    public function downloadFile(string $fileId, string $tempPath): string
     {
         try {
             // First check the file type
