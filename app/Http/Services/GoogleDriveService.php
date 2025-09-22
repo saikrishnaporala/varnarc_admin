@@ -120,9 +120,33 @@ class GoogleDriveService
     //     }
     // }
 
+    public function downloadFile(string $fileId, string $savePath): string
+    {
+        try {
+            // Open a local file handle for writing
+            $fh = fopen($savePath, 'w');
+
+            // Download the file content from Google Drive into the local file
+            $this->service->files->get(
+                $fileId,
+                ['alt' => 'media'],
+                ['sink' => $fh]
+            );
+
+            fclose($fh);
+
+            return $savePath;
+        } catch (\Google\Service\Exception $e) {
+            // Catch Google API exceptions
+            throw new \Exception("Google Drive API error: " . $e->getMessage());
+        } catch (\Exception $e) {
+            // Catch any other exceptions
+            throw new \Exception("Failed to download file: " . $e->getMessage());
+        }
+    }
 
 
-    public function downloadFile(string $fileId, string $tempPath): string
+    public function downloadFile_old(string $fileId, string $tempPath): string
     {
         try {
             // First check the file type
@@ -188,5 +212,5 @@ class GoogleDriveService
         }
     }
 
-    
+
 }

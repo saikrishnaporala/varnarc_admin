@@ -48,65 +48,65 @@ class DataDumpController extends Controller
                 $files = $this->driveService->listFilesRecursive($folderId);
                 $imported = [];
 
-                // foreach ($files as $file) {
-                //     try {
-                //         if (!in_array($file['mime'], [
-                //             'application/vnd.ms-excel',
-                //             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                //             'text/csv'
-                //         ])) {
-                //             continue; // skip PDFs or unsupported
-                //         }
+                foreach ($files as $file) {
+                    try {
+                        if (!in_array($file['mime'], [
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'text/csv'
+                        ])) {
+                            continue; // skip PDFs or unsupported
+                        }
 
-                //         // ✅ Download file locally
-                //         $tempPath = storage_path("app/temp_{$file['id']}");
-                //         $downloadedPath = $this->driveService->downloadFile($file['id'], $tempPath);
+                        // ✅ Download file locally
+                        $tempPath = storage_path("app/temp_{$file['id']}");
+                        $downloadedPath = $this->driveService->downloadFile($file['id'], $tempPath);
 
-                //         // ✅ If XLSX → convert to CSV
-                //         if (in_array($file['mime'], [
-                //             'application/vnd.ms-excel',
-                //             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                //         ])) {
-                //             $csvPath = $this->convertXlsxToCsv($downloadedPath);
-                //             $downloadedPath = $csvPath;
-                //         }
+                        // ✅ If XLSX → convert to CSV
+                        if (in_array($file['mime'], [
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        ])) {
+                            $csvPath = $this->convertXlsxToCsv($downloadedPath);
+                            $downloadedPath = $csvPath;
+                        }
 
-                //         // ✅ Generate table name
-                //         $tableName = $this->makeTableName($file['name']);
+                        // ✅ Generate table name
+                        $tableName = $this->makeTableName($file['name']);
 
-                //         // ✅ Import file into DB
-                //         $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
+                        // ✅ Import file into DB
+                        $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
 
-                //         // ✅ Mark success
-                //         DriveFile::updateOrCreate(
-                //             ['file_id' => $file['id']],
-                //             [
-                //                 'name' => $file['name'],
-                //                 'url' => "https://drive.google.com/file/d/{$file['id']}/view",
-                //                 'mime' => $file['mime'],
-                //                 'status' => 'imported',
-                //                 'table_name' => $tableName,
-                //                 'size' => $file['size'] ?? null,
-                //                 'rows' => $file['rows'] ?? null,
-                //             ]
-                //         );
+                        // ✅ Mark success
+                        DriveFile::updateOrCreate(
+                            ['file_id' => $file['id']],
+                            [
+                                'name' => $file['name'],
+                                'url' => "https://drive.google.com/file/d/{$file['id']}/view",
+                                'mime' => $file['mime'],
+                                'status' => 'imported',
+                                'table_name' => $tableName,
+                                'size' => $file['size'] ?? null,
+                                'rows' => $file['rows'] ?? null,
+                            ]
+                        );
 
-                //         $imported[] = $file['name'];
-                //         unlink($downloadedPath); // cleanup
+                        $imported[] = $file['name'];
+                        unlink($downloadedPath); // cleanup
 
-                //     } catch (\Exception $e) {
-                //         // ✅ Log failed file
-                //         DriveFile::updateOrCreate(
-                //             ['file_id' => $file['id']],
-                //             [
-                //                 'name' => $file['name'],
-                //                 'url' => "https://drive.google.com/file/d/{$file['id']}/view",
-                //                 'mime' => $file['mime'],
-                //                 'status' => 'error: ' . $e->getMessage(),
-                //             ]
-                //         );
-                //     }
-                // }
+                    } catch (\Exception $e) {
+                        // ✅ Log failed file
+                        DriveFile::updateOrCreate(
+                            ['file_id' => $file['id']],
+                            [
+                                'name' => $file['name'],
+                                'url' => "https://drive.google.com/file/d/{$file['id']}/view",
+                                'mime' => $file['mime'],
+                                'status' => 'error: ' . $e->getMessage(),
+                            ]
+                        );
+                    }
+                }
             } else {
                 $fileId = $this->extractFileId($fileUrl);
             }
