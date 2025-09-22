@@ -138,10 +138,12 @@ class GoogleDriveService
             return $savePath;
         } catch (\Google\Service\Exception $e) {
             // Catch Google API exceptions
-            throw new \Exception("Google Drive API error: " . $e->getMessage());
+            return "Google Drive API error: " . $e->getMessage();
+            // throw new \Exception("Google Drive API error: " . $e->getMessage());
         } catch (\Exception $e) {
             // Catch any other exceptions
-            throw new \Exception("Failed to download file: " . $e->getMessage());
+            return "Failed to download file: " . $e->getMessage();
+            // throw new \Exception("Failed to download file: " . $e->getMessage());
         }
     }
 
