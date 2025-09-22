@@ -146,9 +146,11 @@ class DataDumpController extends Controller
             // Use Xlsx reader directly for large files
             $reader = IOFactory::createReader('Xlsx');
             $reader->setReadDataOnly(true);
+            Log::info("reader XLSX → CSV conversion for file");
             $reader->setReadEmptyCells(false); // save memory
+            Log::info("reader1 XLSX → CSV conversion for file");
             $spreadsheet = $reader->load($filePath);
-            
+            Log::info("reader2 XLSX → CSV conversion for file");
             $csvPath = $filePath . ".csv";
             Log::info("Loaded XLSX → CSV conversion for file: {$csvPath}");
             $writer = new Csv($spreadsheet);
