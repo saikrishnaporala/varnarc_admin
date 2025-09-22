@@ -9,6 +9,8 @@ use App\Http\Services\ImportService;
 use App\Models\DriveFile;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use Illuminate\Support\Facades\Log;
+
 
 class DataDumpController extends Controller
 {
@@ -69,14 +71,16 @@ class DataDumpController extends Controller
 
                         $tempPath = storage_path("app/temp_{$file['id']}.{$extension}");
                         $downloadedPath = $this->driveService->downloadFile($file['id'], $tempPath);
-
+                        Log::info("Download completed for file: {$file['name']}. Saved to: {$downloadedPath}");
                         // ✅ If XLSX → convert to CSV
                         if (in_array($file['mime'], [
                             'application/vnd.ms-excel',
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                         ])) {
+                            Log::info("Converting XLS/XLSX to CSV for file: {$file['name']}");
                             $csvPath = $this->convertXlsxToCsv($downloadedPath);
                             $downloadedPath = $csvPath;
+                            Log::info("Conversion completed. CSV saved to: {$csvPath}");
                         }
 
                         // ✅ Generate table name
