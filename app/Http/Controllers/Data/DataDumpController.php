@@ -59,7 +59,23 @@ class DataDumpController extends Controller
                         }
 
                         // ✅ Download file locally
-                        $tempPath = storage_path("app/temp_{$file['id']}");
+                        // Determine extension based on MIME type
+                        $extension = '';
+                        switch ($file['mime']) {
+                            case 'application/vnd.ms-excel':
+                                $extension = 'xls';
+                                break;
+                            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                                $extension = 'xlsx';
+                                break;
+                            case 'text/csv':
+                                $extension = 'csv';
+                                break;
+                            default:
+                                $extension = 'dat'; // fallback
+                        }
+
+                        $tempPath = storage_path("app/temp_{$file['id']}.{$extension}");
                         $downloadedPath = $this->driveService->downloadFile($file['id'], $tempPath);
 
                         // ✅ If XLSX → convert to CSV
