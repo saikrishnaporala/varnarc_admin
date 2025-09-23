@@ -218,15 +218,16 @@ class GoogleDriveService
 {
     try {
         $file = $this->service->files->get($fileId, [
-            'fields' => 'id, name, mimeType, size, parents'
+            'fields' => 'id, name, mimeType, size, parents, webViewLink'
         ]);
 
         // Convert the Google DriveFile object into an array
         return [
             'id' => $file->getId(),
             'name' => $file->getName(),
-            'mimeType' => $file->getMimeType(),
+            'mime' => $file->getMimeType(),
             'size' => $file->getSize(),
+            'url'  => $file->webViewLink,
             'parents' => $file->getParents(),
         ];
 
