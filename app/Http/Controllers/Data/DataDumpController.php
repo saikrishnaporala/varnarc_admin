@@ -47,11 +47,11 @@ class DataDumpController extends Controller
             $ifExists = $request->if_exists ?? 'append';
             $fileType = $request->file_type ?? 'auto';
             $fileUrl  = $request->file_url;
+            $imported = [];
             // ✅ Check if folder
             if (str_contains($fileUrl, '/folders/')) {
                 $folderId = $this->extractFolderId($fileUrl);
                 $files = $this->driveService->listFilesRecursive($folderId);
-                $imported = [];
 
                 foreach ($files as $file) {
                     $this->importFile($file, $imported);
@@ -59,8 +59,8 @@ class DataDumpController extends Controller
             } else {
                 $fileId = $this->extractFileId($fileUrl);
                 $file = $this->driveService->fetchFile($fileId);
-                // $this->importFile($file, $imported);
-                return $file;
+                $stat = $this->importFile($file, $imported);
+                return $stat;
             }
         } catch (\Exception $e) {
             return response()->json([

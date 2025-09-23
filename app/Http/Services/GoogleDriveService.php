@@ -222,12 +222,13 @@ class GoogleDriveService
         ]);
 
         // Convert the Google DriveFile object into an array
-        $fileArray = $file->toSimpleObject();
-
-        return response()->json([
-            'status' => 'success',
-            'file' => $fileArray
-        ], 200);
+        return [
+            'id' => $file->getId(),
+            'name' => $file->getName(),
+            'mimeType' => $file->getMimeType(),
+            'size' => $file->getSize(),
+            'parents' => $file->getParents(),
+        ];
 
     } catch (\Exception $e) {
         return response()->json([
