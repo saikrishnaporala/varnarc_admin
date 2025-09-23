@@ -215,17 +215,26 @@ class GoogleDriveService
     }
 
     public function fetchFile(string $fileId)
-    {
-        try {
-            $file = $this->service->files->get($fileId, [
-                'fields' => 'id, name, mimeType, size, parents'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => "File with ID {$fileId} not found in Google Drive"
-            ], 404);
-        }
-        return $file;
+{
+    try {
+        $file = $this->service->files->get($fileId, [
+            'fields' => 'id, name, mimeType, size, parents'
+        ]);
+
+        // Convert the Google DriveFile object into an array
+        $fileArray = $file->toSimpleObject();
+
+        return response()->json([
+            'status' => 'success',
+            'file' => $fileArray
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => "File with ID {$fileId} not found in Google Drive",
+            'details' => $e->getMessage()
+        ], 404);
     }
+}
 }
