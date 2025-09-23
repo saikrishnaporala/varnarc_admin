@@ -47,85 +47,85 @@ class DataDumpController extends Controller
             $ifExists = $request->if_exists ?? 'append';
             $fileType = $request->file_type ?? 'auto';
             $fileUrl  = $request->file_url;
-            return $fileUrl;
-            // // ✅ Check if folder
-            // if (str_contains($fileUrl, '/folders/')) {
-            //     $folderId = $this->extractFolderId($fileUrl);
-            //     $files = $this->driveService->listFilesRecursive($folderId);
-            //     $imported = [];
+            // ✅ Check if folder
+            if (str_contains($fileUrl, '/folders/')) {
+                $folderId = $this->extractFolderId($fileUrl);
+                $files = $this->driveService->listFilesRecursive($folderId);
+                $imported = [];
 
-            //     foreach ($files as $file) {
-            //         try {
-            //             if (!in_array($file['mime'], [
-            //                 'application/vnd.ms-excel',
-            //                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            //                 'text/csv'
-            //             ])) {
-            //                 continue; // skip PDFs or unsupported
-            //             }
+                foreach ($files as $file) {
+                    try {
+                        if (!in_array($file['mime'], [
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'text/csv'
+                        ])) {
+                            continue; // skip PDFs or unsupported
+                        }
 
-            //             // ✅ Download file locally
-            //             $mime = $file['mime'];
-            //             $extension = match ($mime) {
-            //                 'application/vnd.ms-excel' => 'xls',
-            //                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
-            //                 'text/csv' => 'csv',
-            //                 default => 'dat', // fallback
-            //             };
+                        // ✅ Download file locally
+                        $mime = $file['mime'];
+                        $extension = match ($mime) {
+                            'application/vnd.ms-excel' => 'xls',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
+                            'text/csv' => 'csv',
+                            default => 'dat', // fallback
+                        };
 
-            //             $tempPath = storage_path("app/temp_{$file['id']}.{$extension}");
-            //             $downloadedPath = $this->driveService->downloadFile($file['id'], $tempPath);
-            //             Log::info("Download completed for file: {$file['name']}. Saved to: {$downloadedPath}");
-            //             // ✅ If XLSX → convert to CSV
-            //             if (in_array($file['mime'], [
-            //                 'application/vnd.ms-excel',
-            //                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            //             ])) {
-            //                 Log::info("Converting XLS/XLSX to CSV for file: {$file['name']}");
-            //                 $csvPath = $this->convertXlsxToCsv($downloadedPath);
-            //                 $downloadedPath = $csvPath;
-            //                 Log::info("Conversion completed. CSV saved to: {$csvPath}");
-            //             }
+                        $tempPath = storage_path("app/temp_{$file['id']}.{$extension}");
+                        $downloadedPath = $this->driveService->downloadFile($file['id'], $tempPath);
+                        Log::info("Download completed for file: {$file['name']}. Saved to: {$downloadedPath}");
+                        // ✅ If XLSX → convert to CSV
+                        if (in_array($file['mime'], [
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        ])) {
+                            Log::info("Converting XLS/XLSX to CSV for file: {$file['name']}");
+                            $csvPath = $this->convertXlsxToCsv($downloadedPath);
+                            $downloadedPath = $csvPath;
+                            Log::info("Conversion completed. CSV saved to: {$csvPath}");
+                        }
 
-            //             // ✅ Generate table name
-            //             $tableName = $this->makeTableName($file['name']);
+                        // ✅ Generate table name
+                        $tableName = $this->makeTableName($file['name']);
 
-            //             // ✅ Import file into DB
-            //             $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
+                        // ✅ Import file into DB
+                        $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
 
-            //             // ✅ Mark success
-            //             DriveFile::updateOrCreate(
-            //                 ['file_id' => $file['id']],
-            //                 [
-            //                     'name' => $file['name'],
-            //                     'url' => "https://drive.google.com/file/d/{$file['id']}/view",
-            //                     'mime' => $file['mime'],
-            //                     'status' => 'imported',
-            //                     'table_name' => $tableName,
-            //                     'size' => $file['size'] ?? null,
-            //                     'rows' => $file['rows'] ?? null,
-            //                 ]
-            //             );
+                        // ✅ Mark success
+                        DriveFile::updateOrCreate(
+                            ['file_id' => $file['id']],
+                            [
+                                'name' => $file['name'],
+                                'url' => "https://drive.google.com/file/d/{$file['id']}/view",
+                                'mime' => $file['mime'],
+                                'status' => 'imported',
+                                'table_name' => $tableName,
+                                'size' => $file['size'] ?? null,
+                                'rows' => $file['rows'] ?? null,
+                            ]
+                        );
 
-            //             $imported[] = $file['name'];
-            //             unlink($downloadedPath); // cleanup
+                        $imported[] = $file['name'];
+                        unlink($downloadedPath); // cleanup
 
-            //         } catch (\Exception $e) {
-            //             // ✅ Log failed file
-            //             DriveFile::updateOrCreate(
-            //                 ['file_id' => $file['id']],
-            //                 [
-            //                     'name' => $file['name'],
-            //                     'url' => "https://drive.google.com/file/d/{$file['id']}/view",
-            //                     'mime' => $file['mime'],
-            //                     'status' => 'error: ' . $e->getMessage(),
-            //                 ]
-            //             );
-            //         }
-            //     }
-            // } else {
-            //     $fileId = $this->extractFileId($fileUrl);
-            // }
+                    } catch (\Exception $e) {
+                        // ✅ Log failed file
+                        DriveFile::updateOrCreate(
+                            ['file_id' => $file['id']],
+                            [
+                                'name' => $file['name'],
+                                'url' => "https://drive.google.com/file/d/{$file['id']}/view",
+                                'mime' => $file['mime'],
+                                'status' => 'error: ' . $e->getMessage(),
+                            ]
+                        );
+                    }
+                }
+            } else {
+                $fileId = $this->extractFileId($fileUrl);
+                return $fileId;
+            }
         } catch (\Exception $e) {
             return response()->json([
                 'status'  => 'error',
