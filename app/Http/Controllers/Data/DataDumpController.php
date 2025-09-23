@@ -59,7 +59,7 @@ class DataDumpController extends Controller
             } else {
                 $fileId = $this->extractFileId($fileUrl);
                 $file = $this->driveService->fetchFile($fileId);
-                // $stat = $this->importFile($file, $imported);
+                $stat = $this->importFile($file, $imported);
                 return $file;
             }
         } catch (\Exception $e) {
