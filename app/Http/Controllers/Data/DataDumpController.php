@@ -58,8 +58,8 @@ class DataDumpController extends Controller
                 }
             } else {
                 $fileId = $this->extractFileId($fileUrl);
-                $file = json_decode(json_encode($this->driveService->fetchFile($fileId)), true);
-                $stat = $this->importFile($file, $imported);
+                $file = $this->driveService->fetchFile($fileId);
+                // $stat = $this->importFile($file->toArray(), $imported);
                 return $file;
             }
         } catch (\Exception $e) {
