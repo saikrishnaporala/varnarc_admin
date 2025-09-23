@@ -8,8 +8,12 @@ use App\Http\Services\GoogleDriveService;
 use App\Http\Services\ImportService;
 use App\Models\DriveFile;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Writer\Csv;
+// use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use Illuminate\Support\Facades\Log;
+
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Xls;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
 
 
 class DataDumpController extends Controller
@@ -143,8 +147,20 @@ class DataDumpController extends Controller
         try {
             Log::info("Starting XLSX → CSV conversion for file: {$filePath}");
 
+            $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+            if ($ext === 'xlsx') {
+                $reader = new Xlsx();
+            } elseif ($ext === 'xls') {
+                $reader = new Xls();
+            } elseif ($ext === 'csv') {
+                $reader = new Csv();
+            } else {
+                throw new \Exception("Unsupported file extension: $ext");
+            }
+
             // Use Xlsx reader directly for large files
-            $reader = IOFactory::createReader('Xlsx');
+            // $reader = IOFactory::createReader('Xlsx');
             $reader->setReadDataOnly(true);
             Log::info("reader XLSX → CSV conversion for file");
             $reader->setReadEmptyCells(false); // save memory
@@ -153,7 +169,7 @@ class DataDumpController extends Controller
             Log::info("reader2 XLSX → CSV conversion for file");
             $csvPath = $filePath . ".csv";
             Log::info("Loaded XLSX → CSV conversion for file: {$csvPath}");
-            $writer = new Csv($spreadsheet);
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
             $writer->setDelimiter(',');
             $writer->setEnclosure('"');
             $writer->setSheetIndex(0); // first sheet only
