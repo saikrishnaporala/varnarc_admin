@@ -298,7 +298,7 @@ class DataDumpController extends Controller
     //     return strtolower("Data_".$name);
     // }
 
-    private function importFile(array $file, array &$imported): void
+    private function importFile(array $file, array &$imported)
     {
         try {
             if (!in_array($file['mime'], [
@@ -340,7 +340,7 @@ class DataDumpController extends Controller
             $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
 
             // ✅ Mark success
-            DriveFile::updateOrCreate(
+            $stat = DriveFile::updateOrCreate(
                 ['file_id' => $file['id']],
                 [
                     'name' => $file['name'],
@@ -355,10 +355,10 @@ class DataDumpController extends Controller
 
             $imported[] = $file['name'];
             unlink($downloadedPath); // cleanup
-
+            return $stat;
         } catch (\Exception $e) {
             // ✅ Log failed file
-            DriveFile::updateOrCreate(
+            return DriveFile::updateOrCreate(
                 ['file_id' => $file['id']],
                 [
                     'name' => $file['name'],
