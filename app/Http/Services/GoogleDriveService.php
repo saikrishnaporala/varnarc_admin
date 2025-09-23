@@ -214,5 +214,18 @@ class GoogleDriveService
         }
     }
 
-
+    public function fetchFile(string $fileId)
+    {
+        try {
+            $file = $this->service->files->get($fileId, [
+                'fields' => 'id, name, mimeType, size, parents'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => "File with ID {$fileId} not found in Google Drive"
+            ], 404);
+        }
+        return $file;
+    }
 }

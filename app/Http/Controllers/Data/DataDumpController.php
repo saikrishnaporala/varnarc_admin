@@ -54,77 +54,13 @@ class DataDumpController extends Controller
                 $imported = [];
 
                 foreach ($files as $file) {
-                    try {
-                        if (!in_array($file['mime'], [
-                            'application/vnd.ms-excel',
-                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                            'text/csv'
-                        ])) {
-                            continue; // skip PDFs or unsupported
-                        }
-
-                        // ✅ Download file locally
-                        $mime = $file['mime'];
-                        $extension = match ($mime) {
-                            'application/vnd.ms-excel' => 'xls',
-                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
-                            'text/csv' => 'csv',
-                            default => 'dat', // fallback
-                        };
-
-                        $tempPath = storage_path("app/temp_{$file['id']}.{$extension}");
-                        $downloadedPath = $this->driveService->downloadFile($file['id'], $tempPath);
-                        Log::info("Download completed for file: {$file['name']}. Saved to: {$downloadedPath}");
-                        // ✅ If XLSX → convert to CSV
-                        if (in_array($file['mime'], [
-                            'application/vnd.ms-excel',
-                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                        ])) {
-                            Log::info("Converting XLS/XLSX to CSV for file: {$file['name']}");
-                            $csvPath = $this->convertXlsxToCsv($downloadedPath);
-                            $downloadedPath = $csvPath;
-                            Log::info("Conversion completed. CSV saved to: {$csvPath}");
-                        }
-
-                        // ✅ Generate table name
-                        $tableName = $this->makeTableName($file['name']);
-
-                        // ✅ Import file into DB
-                        $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
-
-                        // ✅ Mark success
-                        DriveFile::updateOrCreate(
-                            ['file_id' => $file['id']],
-                            [
-                                'name' => $file['name'],
-                                'url' => "https://drive.google.com/file/d/{$file['id']}/view",
-                                'mime' => $file['mime'],
-                                'status' => 'imported',
-                                'table_name' => $tableName,
-                                'size' => $file['size'] ?? null,
-                                'rows' => $file['rows'] ?? null,
-                            ]
-                        );
-
-                        $imported[] = $file['name'];
-                        unlink($downloadedPath); // cleanup
-
-                    } catch (\Exception $e) {
-                        // ✅ Log failed file
-                        DriveFile::updateOrCreate(
-                            ['file_id' => $file['id']],
-                            [
-                                'name' => $file['name'],
-                                'url' => "https://drive.google.com/file/d/{$file['id']}/view",
-                                'mime' => $file['mime'],
-                                'status' => 'error: ' . $e->getMessage(),
-                            ]
-                        );
-                    }
+                    $this->importFile($file, $imported);
                 }
             } else {
                 $fileId = $this->extractFileId($fileUrl);
-                return $fileId;
+                $file = $this->driveService->fetchFile($fileId);
+                // $this->importFile($file, $imported);
+                return $file;
             }
         } catch (\Exception $e) {
             return response()->json([
@@ -361,4 +297,77 @@ class DataDumpController extends Controller
     //     // Convert to lowercase
     //     return strtolower("Data_".$name);
     // }
+
+    private function importFile(array $file, array &$imported): void
+    {
+        try {
+            if (!in_array($file['mime'], [
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'text/csv'
+            ])) {
+                return; // skip unsupported
+            }
+
+            // ✅ Detect extension
+            $extension = match ($file['mime']) {
+                'application/vnd.ms-excel' => 'xls',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
+                'text/csv' => 'csv',
+                default => 'dat',
+            };
+
+            // ✅ Download file
+            $tempPath = storage_path("app/temp_{$file['id']}.{$extension}");
+            $downloadedPath = $this->driveService->downloadFile($file['id'], $tempPath);
+            Log::info("Download completed for file: {$file['name']}. Saved to: {$downloadedPath}");
+
+            // ✅ Convert to CSV if needed
+            if (in_array($file['mime'], [
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ])) {
+                Log::info("Converting XLS/XLSX to CSV for file: {$file['name']}");
+                $csvPath = $this->convertXlsxToCsv($downloadedPath);
+                $downloadedPath = $csvPath;
+                Log::info("Conversion completed. CSV saved to: {$csvPath}");
+            }
+
+            // ✅ Generate table name
+            $tableName = $this->makeTableName($file['name']);
+
+            // ✅ Import file into DB
+            $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
+
+            // ✅ Mark success
+            DriveFile::updateOrCreate(
+                ['file_id' => $file['id']],
+                [
+                    'name' => $file['name'],
+                    'url' => "https://drive.google.com/file/d/{$file['id']}/view",
+                    'mime' => $file['mime'],
+                    'status' => 'imported',
+                    'table_name' => $tableName,
+                    'size' => $file['size'] ?? null,
+                    'rows' => $file['rows'] ?? null,
+                ]
+            );
+
+            $imported[] = $file['name'];
+            unlink($downloadedPath); // cleanup
+
+        } catch (\Exception $e) {
+            // ✅ Log failed file
+            DriveFile::updateOrCreate(
+                ['file_id' => $file['id']],
+                [
+                    'name' => $file['name'],
+                    'url' => "https://drive.google.com/file/d/{$file['id']}/view",
+                    'mime' => $file['mime'],
+                    'status' => 'error: ' . $e->getMessage(),
+                ]
+            );
+            Log::error("Import failed for file: {$file['name']}. Error: " . $e->getMessage());
+        }
+    }
 }
