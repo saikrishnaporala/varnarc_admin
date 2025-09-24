@@ -299,7 +299,7 @@ class DataDumpController extends Controller
                 'application/vnd.ms-excel' => 'xls',
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
                 'text/csv' => 'csv',
-                'application/vnd.google-apps.spreadsheet' => 'csv',
+                'application/vnd.google-apps.spreadsheet' => 'xlsx',
                 default => 'dat',
             };
 
@@ -346,7 +346,7 @@ class DataDumpController extends Controller
             // unlink($downloadedPath); // cleanup
             return $processStat . " test : ".$stat;
         } catch (\Exception $e) {
-            throw $e;
+            // throw $e;
             // ✅ Log failed file
             $stat = DriveFile::updateOrCreate(
                 ['file_id' => $file['id']],
