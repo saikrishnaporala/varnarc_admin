@@ -233,6 +233,8 @@ class ImportService
                 $normalized[] = $col ?: 'col_' . uniqid();
             }
 
+            Log::info("Normal columns: {$normalized}");
+
             // Drop + recreate table if needed
             if (Schema::hasTable($tableName) && $ifExists === 'replace') {
                 Schema::drop($tableName);
@@ -285,7 +287,7 @@ class ImportService
             // ✅ Bubble up with clean error
             return [
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e
             ];
         }
     }
