@@ -221,7 +221,8 @@ class ImportService
             if (!$headers) {
                 throw new \Exception("No headers found in file");
             }
-            Log::info("Process Table name: ".json_encode($headers));
+
+            Log::info("Table name: {$tableName}");
             
             // Normalize columns
             $normalized = [];
@@ -231,8 +232,6 @@ class ImportService
                 $col = preg_replace('/_+/', '_', $col);
                 $normalized[] = $col ?: 'col_' . uniqid();
             }
-
-            Log::info("Normal columns: {$normalized}");
 
             // Drop + recreate table if needed
             if (Schema::hasTable($tableName) && $ifExists === 'replace') {
@@ -248,8 +247,6 @@ class ImportService
                     $table->timestamps();
                 });
             }
-
-            Log::info("Table created: {$tableName}");
 
             // Insert in batches
             $batch = [];
@@ -286,7 +283,7 @@ class ImportService
             // ✅ Bubble up with clean error
             return [
                 'status' => 'error',
-                'message' => $e
+                'message' => $e->getMessage()
             ];
         }
     }

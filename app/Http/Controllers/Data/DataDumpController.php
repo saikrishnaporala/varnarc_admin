@@ -299,7 +299,7 @@ class DataDumpController extends Controller
                 'application/vnd.ms-excel' => 'xls',
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
                 'text/csv' => 'csv',
-                'application/vnd.google-apps.spreadsheet' => 'xlsx',
+                'application/vnd.google-apps.spreadsheet' => 'csv',
                 default => 'dat',
             };
 
@@ -327,7 +327,7 @@ class DataDumpController extends Controller
             // ✅ Import file into DB
             $processStat = $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
 
-            Log::info("Process State: {$processStat}");
+            Log::info("Table name: {$tableName}");
             // ✅ Mark success
             $stat = DriveFile::updateOrCreate(
                 ['file_id' => $file['id']],
@@ -344,9 +344,8 @@ class DataDumpController extends Controller
 
             // $imported[] = $file['name'];
             // unlink($downloadedPath); // cleanup
-            return $processStat . " test : ".$stat;
+            return $processStat ." test : ".$stat;
         } catch (\Exception $e) {
-            // throw $e;
             // ✅ Log failed file
             $stat = DriveFile::updateOrCreate(
                 ['file_id' => $file['id']],
@@ -357,7 +356,7 @@ class DataDumpController extends Controller
                     'status' => 'error: ' . $e->getMessage(),
                 ]
             );
-            Log::error("Import failed for file: {$file['name']}. Error: " . $e);
+            Log::error("Import failed for file: {$file['name']}. Error: " . $e->getMessage());
             return "Import failed for file: {$file['name']}. Error: " . $e->getMessage(). " Drive File Stat : ".$stat;
         }
     }
