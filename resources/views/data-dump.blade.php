@@ -14,7 +14,7 @@
         @slot('title') Google Drive Dump @endslot
     @endcomponent
     <div class="row">
-        <div class="col-xxl-12">
+        <div class="col-xxl-9">
             <div class="card">
                 <div class="card-body">
                     <div>
