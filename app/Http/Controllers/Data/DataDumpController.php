@@ -62,7 +62,7 @@ class DataDumpController extends Controller
                 $fileId = $this->extractFileId($fileUrl);
                 $file = $this->driveService->fetchFile($fileId);
                 $stat = $this->importFile($file, $imported);
-                return "Result : ".$stat;
+                return "Result : ".json_encode($stat);
             }
         } catch (\Exception $e) {
             return response()->json([
@@ -333,7 +333,7 @@ class DataDumpController extends Controller
                 ['file_id' => $file['id']],
                 [
                     'name' => $file['name'],
-                    'url' => "https://drive.google.com/file/d/{$file['id']}/view",
+                    'url' => $file['url'],
                     'mime' => $file['mime'],
                     'status' => 'imported',
                     'table_name' => $tableName,
@@ -341,9 +341,10 @@ class DataDumpController extends Controller
                     'rows' => $file['rows'] ?? null,
                 ]
             );
-
+            Log::info("stat: ".json_encode(($stat)));
             $imported[] = $file['name'];
             unlink($downloadedPath); // cleanup
+            Log::info("after unlink stat: ".json_encode(($stat)));
             return $processStat;
         } catch (\Exception $e) {
             // ✅ Log failed file
@@ -351,7 +352,7 @@ class DataDumpController extends Controller
                 ['file_id' => $file['id']],
                 [
                     'name' => $file['name'],
-                    'url' => "https://drive.google.com/file/d/{$file['id']}/view",
+                    'url' => $file['url'],
                     'mime' => $file['mime'],
                     'status' => 'error: ' . $e->getMessage(),
                 ]
