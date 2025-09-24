@@ -288,7 +288,8 @@ class DataDumpController extends Controller
             if (!in_array($file['mime'], [
                 'application/vnd.ms-excel',
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'text/csv'
+                'text/csv',
+                'application/vnd.google-apps.spreadsheet'
             ])) {
                 return "error"; // skip unsupported
             }
@@ -298,6 +299,7 @@ class DataDumpController extends Controller
                 'application/vnd.ms-excel' => 'xls',
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
                 'text/csv' => 'csv',
+                'application/vnd.google-apps.spreadsheet' => 'csv',
                 default => 'dat',
             };
 
