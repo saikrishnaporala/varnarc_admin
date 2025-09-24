@@ -124,7 +124,6 @@ $(document).ready(function () {
                             return mime;
                         }
                     },
-                    { data: "file_id", defaultContent: "" },
                     { data: "status", defaultContent: "" },
                     { data: "table_name", defaultContent: "" },
                     {
