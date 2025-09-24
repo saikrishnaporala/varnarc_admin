@@ -342,9 +342,9 @@ class DataDumpController extends Controller
                 ]
             );
 
-            // $imported[] = $file['name'];
-            // unlink($downloadedPath); // cleanup
-            return $processStat ." test : ".$stat;
+            $imported[] = $file['name'];
+            unlink($downloadedPath); // cleanup
+            return $processStat ." test : ".$stat->toArray();
         } catch (\Exception $e) {
             // ✅ Log failed file
             $stat = DriveFile::updateOrCreate(
