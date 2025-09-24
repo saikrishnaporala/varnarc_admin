@@ -327,7 +327,7 @@ class DataDumpController extends Controller
             // ✅ Import file into DB
             $processStat = $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
 
-            Log::info("Table name: {$tableName}");
+            Log::info("Process State: {$processStat}");
             // ✅ Mark success
             $stat = DriveFile::updateOrCreate(
                 ['file_id' => $file['id']],
