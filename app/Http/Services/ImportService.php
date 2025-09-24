@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
 use Exception;
 
 
@@ -206,74 +207,84 @@ class ImportService
 
     public function processLargeCsv(string $filePath, string $tableName, string $ifExists = 'append')
     {
-        if (!file_exists($filePath)) {
-            throw new \Exception("File not found: {$filePath}");
-        }
+        try {
+            if (!file_exists($filePath)) {
+                throw new \Exception("File not found: {$filePath}");
+            }
 
-        $handle = fopen($filePath, 'r');
-        if (!$handle) {
-            throw new \Exception("Cannot open file: {$filePath}");
-        }
+            $handle = fopen($filePath, 'r');
+            if (!$handle) {
+                throw new \Exception("Cannot open file: {$filePath}");
+            }
 
-        $headers = fgetcsv($handle);
-        if (!$headers) {
-            throw new \Exception("No headers found in file");
-        }
+            $headers = fgetcsv($handle);
+            if (!$headers) {
+                throw new \Exception("No headers found in file");
+            }
 
-        // Normalize columns
-        $normalized = [];
-        foreach ($headers as $col) {
-            $col = strtolower(trim($col));
-            $col = preg_replace('/[^a-z0-9_]/', '_', $col);
-            $col = preg_replace('/_+/', '_', $col);
-            $normalized[] = $col ?: 'col_' . uniqid();
-        }
+            Log::info("Table name: {$tableName}");
+            
+            // Normalize columns
+            $normalized = [];
+            foreach ($headers as $col) {
+                $col = strtolower(trim($col));
+                $col = preg_replace('/[^a-z0-9_]/', '_', $col);
+                $col = preg_replace('/_+/', '_', $col);
+                $normalized[] = $col ?: 'col_' . uniqid();
+            }
 
-        // Drop + recreate table if needed
-        if (Schema::hasTable($tableName) && $ifExists === 'replace') {
-            Schema::drop($tableName);
-        }
+            // Drop + recreate table if needed
+            if (Schema::hasTable($tableName) && $ifExists === 'replace') {
+                Schema::drop($tableName);
+            }
 
-        if (!Schema::hasTable($tableName)) {
-            Schema::create($tableName, function (Blueprint $table) use ($normalized) {
-                $table->id();
-                foreach ($normalized as $col) {
-                    $table->text($col)->nullable();
+            if (!Schema::hasTable($tableName)) {
+                Schema::create($tableName, function (Blueprint $table) use ($normalized) {
+                    $table->id();
+                    foreach ($normalized as $col) {
+                        $table->text($col)->nullable();
+                    }
+                    $table->timestamps();
+                });
+            }
+
+            // Insert in batches
+            $batch = [];
+            $inserted = 0;
+            while (($row = fgetcsv($handle)) !== false) {
+                $data = [];
+                foreach ($normalized as $i => $col) {
+                    $data[$col] = $row[$i] ?? null;
                 }
-                $table->timestamps();
-            });
-        }
 
-        // Insert in batches
-        $batch = [];
-        $inserted = 0;
-        while (($row = fgetcsv($handle)) !== false) {
-            $data = [];
-            foreach ($normalized as $i => $col) {
-                $data[$col] = $row[$i] ?? null;
+                if (!empty(array_filter($data))) {
+                    $batch[] = $data;
+                }
+
+                if (count($batch) >= 1000) {
+                    DB::table($tableName)->insert($batch);
+                    $inserted += count($batch);
+                    $batch = [];
+                }
             }
 
-            if (!empty(array_filter($data))) {
-                $batch[] = $data;
-            }
-
-            if (count($batch) >= 1000) {
+            if (!empty($batch)) {
                 DB::table($tableName)->insert($batch);
                 $inserted += count($batch);
-                $batch = [];
             }
+
+            fclose($handle);
+
+            return [
+                'status' => 'success',
+                'rows' => $inserted
+            ];
+        } catch (Exception $e) {
+            // ✅ Bubble up with clean error
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
         }
-
-        if (!empty($batch)) {
-            DB::table($tableName)->insert($batch);
-            $inserted += count($batch);
-        }
-
-        fclose($handle);
-
-        return [
-            'status' => 'success',
-            'rows' => $inserted
-        ];
     }
 }

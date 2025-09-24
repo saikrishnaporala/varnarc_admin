@@ -282,24 +282,6 @@ class DataDumpController extends Controller
         return null;
     }
 
-    // private function makeTableName(string $filename): string
-    // {
-    //     // Remove extension
-    //     $name = pathinfo($filename, PATHINFO_FILENAME);
-
-    //     // Replace anything not a-z, A-Z, 0-9 with underscore
-    //     $name = preg_replace('/[^A-Za-z0-9]+/', '_', $name);
-
-    //     // Trim multiple underscores
-    //     $name = preg_replace('/_+/', '_', $name);
-
-    //     // Remove leading/trailing underscores
-    //     $name = trim($name, '_');
-
-    //     // Convert to lowercase
-    //     return strtolower("Data_".$name);
-    // }
-
     private function importFile(array $file, array &$imported)
     {
         try {
@@ -338,9 +320,12 @@ class DataDumpController extends Controller
             // ✅ Generate table name
             $tableName = $this->makeTableName($file['name']);
 
+            Log::info("Table name: {$tableName}");
+
             // ✅ Import file into DB
             $this->importService->processLargeCsv($downloadedPath, $tableName, 'append');
 
+            Log::info("Table name: {$tableName}");
             // ✅ Mark success
             $stat = DriveFile::updateOrCreate(
                 ['file_id' => $file['id']],
@@ -355,8 +340,8 @@ class DataDumpController extends Controller
                 ]
             );
 
-            $imported[] = $file['name'];
-            unlink($downloadedPath); // cleanup
+            // $imported[] = $file['name'];
+            // unlink($downloadedPath); // cleanup
             return " test : ".$stat;
         } catch (\Exception $e) {
             // ✅ Log failed file
