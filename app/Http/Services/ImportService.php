@@ -221,8 +221,8 @@ class ImportService
             if (!$headers) {
                 throw new \Exception("No headers found in file");
             }
-
-            Log::info("Process Table name: {$headers}");
+            Log::info("Process Table name");
+            Log::error("Process Table name: ".json_encode($headers));
             
             // Normalize columns
             $normalized = [];
