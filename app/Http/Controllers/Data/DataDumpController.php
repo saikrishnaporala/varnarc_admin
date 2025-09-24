@@ -290,7 +290,7 @@ class DataDumpController extends Controller
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'text/csv'
             ])) {
-                return; // skip unsupported
+                return "error"; // skip unsupported
             }
 
             // ✅ Detect extension
