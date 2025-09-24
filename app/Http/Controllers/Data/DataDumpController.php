@@ -360,7 +360,7 @@ class DataDumpController extends Controller
             return $stat;
         } catch (\Exception $e) {
             // ✅ Log failed file
-            return DriveFile::updateOrCreate(
+            $stat = DriveFile::updateOrCreate(
                 ['file_id' => $file['id']],
                 [
                     'name' => $file['name'],
@@ -370,6 +370,7 @@ class DataDumpController extends Controller
                 ]
             );
             Log::error("Import failed for file: {$file['name']}. Error: " . $e->getMessage());
+            return "Import failed for file: {$file['name']}. Error: " . $e->getMessage(). " Drive File Stat : ".$stat;
         }
     }
 }
