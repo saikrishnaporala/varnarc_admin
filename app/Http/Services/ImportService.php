@@ -222,7 +222,7 @@ class ImportService
                 throw new \Exception("No headers found in file");
             }
 
-            Log::info("Table name: {$tableName}");
+            Log::info("Process Table name: {$tableName}");
             
             // Normalize columns
             $normalized = [];
@@ -247,6 +247,8 @@ class ImportService
                     $table->timestamps();
                 });
             }
+
+            Log::info("Table created: {$tableName}");
 
             // Insert in batches
             $batch = [];
