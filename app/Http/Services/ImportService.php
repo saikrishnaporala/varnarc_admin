@@ -222,7 +222,7 @@ class ImportService
                 throw new \Exception("No headers found in file");
             }
 
-            Log::info("Process Table name: {$tableName}");
+            Log::info("Process Table name: {$headers}");
             
             // Normalize columns
             $normalized = [];
