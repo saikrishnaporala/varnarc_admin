@@ -256,7 +256,7 @@ $(document).ready(function () {
         $('#filesTableWrapper').fadeOut('fast', function () {
             // Load table records via AJAX
             $.ajax({
-                url: '/data/records/' + tableName, // Laravel route
+                url: '/api/data/records/' + tableName, // Laravel route
                 method: 'GET',
                 success: function (response) {
                     // Set title
