@@ -248,4 +248,44 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on('click', '.view-item-btn', function () {
+        let tableName = $(this).data('table');
+
+        // Fade out files list
+        $('#filesTableWrapper').fadeOut('fast', function () {
+            // Load table records via AJAX
+            $.ajax({
+                url: '/data/records/' + tableName, // Laravel route
+                method: 'GET',
+                success: function (response) {
+                    // Set title
+                    $('#recordsTitle').text("Records from: " + tableName);
+
+                    // Destroy old DataTable if exists
+                    if ($.fn.DataTable.isDataTable('#recordsTable')) {
+                        $('#recordsTable').DataTable().destroy();
+                        $('#recordsTable').empty();
+                    }
+
+                    // Build new DataTable
+                    $('#recordsTable').DataTable({
+                        data: response.data,
+                        columns: response.columns,
+                        pageLength: 10
+                    });
+
+                    // Show records
+                    $('#recordsWrapper').fadeIn();
+                }
+            });
+        });
+    });
+
+    // Back button → go back to files list
+    $('#backBtn').on('click', function () {
+        $('#recordsWrapper').fadeOut('fast', function () {
+            $('#filesTableWrapper').fadeIn();
+        });
+    });
 });
