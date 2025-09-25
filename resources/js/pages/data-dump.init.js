@@ -271,7 +271,20 @@ $(document).ready(function () {
                     // Build new DataTable
                     $('#recordsTable').DataTable({
                         data: response.data,
-                        columns: response.columns,
+                        columns: [
+                            ...response.columns.slice(0, -1), // all except "Actions"
+                            {
+                                data: null,
+                                title: "Actions",
+                                render: function (data, type, row) {
+                                    return `
+                                        <button class="btn btn-sm btn-primary view-btn" data-id="${row.id}" data-table="${tableName}">Add to Contacts</button>
+                                        <button class="btn btn-sm btn-warning edit-btn" data-id="${row.id}" data-table="${tableName}">Edit</button>
+                                        <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}" data-table="${tableName}">Delete</button>
+                                    `;
+                                }
+                            }
+                        ],
                         pageLength: 10
                     });
 
