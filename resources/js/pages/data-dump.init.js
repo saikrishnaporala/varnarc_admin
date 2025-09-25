@@ -136,7 +136,7 @@ $(document).ready(function () {
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item view-item-btn" href="javascript:void(0);" data-id="${row.id}">
+                                            <a class="dropdown-item view-item-btn" href="javascript:void(0);" data-id="${row.table_name}">
                                                 <i class="ri-eye-fill align-bottom me-2 text-muted"></i> View
                                             </a>
                                         </li>
