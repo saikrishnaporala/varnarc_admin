@@ -250,7 +250,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.view-item-btn', function () {
-        let tableName = $(this).data('table');
+        let tableName = $(this).data('id');
 
         // Fade out files list
         $('#filesTableWrapper').fadeOut('fast', function () {
