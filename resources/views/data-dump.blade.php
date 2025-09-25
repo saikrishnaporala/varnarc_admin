@@ -15,7 +15,7 @@
     @endcomponent
     <div class="row">
         <div class="col-xxl-9">
-            <div class="card">
+            <div class="card" id="filesTableWrapper">
                 <div class="card-body">
                     <div>
                         <table class="table table-bordered dt-responsive nowrap table-striped align-middle" id="driveFilesTable" style="width:100%">
@@ -81,6 +81,13 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="card" id="recordsWrapper" style="display:none;">
+                <div class="card-body">
+                    <button id="backBtn" class="btn btn-secondary mb-2">⬅ Back</button>
+                    <h4 id="recordsTitle"></h4>
+                    <table id="recordsTable" class="table table-bordered"></table>
                 </div>
             </div>
             <!--end card-->

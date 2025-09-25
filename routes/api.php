@@ -29,6 +29,8 @@ Route::apiResource('datadump', DataDumpController::class);
 Route::post('/drive/download', [GoogleDriveController::class, 'download']);
 Route::post('/import/google-drive', [DataDumpController::class, 'importFromGoogleDrive']);
 Route::post('/datadump/{id}', [DataDumpController::class, 'import']);
+Route::get('/data/records/{tableName}', [DataDumpController::class, 'getTableRecords'])
+    ->name('data.records');
 
 
 use App\Http\Controllers\Api\CommandController;

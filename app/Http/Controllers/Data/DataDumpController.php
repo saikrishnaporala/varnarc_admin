@@ -10,6 +10,9 @@ use App\Models\DriveFile;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 // use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
 
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
@@ -31,6 +34,35 @@ class DataDumpController extends Controller
     public function index()
     {
         return response()->json(DriveFile::all());
+    }
+
+    public function getTableRecords($tableName)
+    {
+        // ✅ Security: allow only imported tables from DriveFile
+        if (!Schema::hasTable($tableName)) {
+            return response()->json(['error' => "Table {$tableName} not found"], 404);
+        }
+
+        // ✅ Fetch first 500 rows for performance
+        $rows = DB::table($tableName)->limit(500)->get();
+
+        if ($rows->isEmpty()) {
+            return response()->json([
+                'columns' => [],
+                'data' => []
+            ]);
+        }
+
+        // ✅ Build column definitions for DataTables
+        $columns = collect($rows->first())->keys()->map(fn($c) => [
+            'data' => $c,
+            'title' => ucfirst(str_replace('_', ' ', $c))
+        ]);
+
+        return response()->json([
+            'columns' => $columns,
+            'data' => $rows
+        ]);
     }
 
     public function importFromGoogleDrive(Request $request)
