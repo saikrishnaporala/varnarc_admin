@@ -40,56 +40,6 @@ $(document).ready(function () {
         });
     });
 
-    // Load contacts into table
-    // function loadDriveFiles() {
-    //     $.get("/api/datadump", function (data) {
-    //         let tbody = $("#driveFilesTable tbody");
-    //         tbody.empty();
-
-    //         if (data.length === 0) {
-    //             $(".noresult").show();
-    //             return;
-    //         }
-    //         $(".noresult").hide();
-
-    //         data.forEach(dump => {
-    //             tbody.append(`
-    //                 <tr>
-    //                     <td>
-    //                         <div class="form-check">
-    //                             <input class="form-check-input" type="checkbox" name="chk_child" value="${dump.id}">
-    //                         </div>
-    //                     </td>
-    //                     <td class="name">${dump.name ?? ''}</td>
-    //                     <td class="mime">${getShortMime(dump.mime) ?? ''}</td>
-    //                     <td class="file_id">${dump.file_id ?? ''}</td>
-    //                     <td class="status">${dump.status ?? ''}</td>
-    //                     <td class="table_name">${dump.table_name ?? ''}</td>
-    //                     <td>
-    //                         <div class="dropdown">
-    //                             <button class="btn btn-soft-secondary btn-sm dropdown" data-bs-toggle="dropdown">
-    //                                 <i class="ri-more-fill align-middle"></i>
-    //                             </button>
-    //                             <ul class="dropdown-menu dropdown-menu-end">
-    //                                 <li><a class="dropdown-item view-item-btn" href="javascript:void(0);" data-id="${dump.id}">
-    //                                     <i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>
-    //                                 <li><a class="dropdown-item edit-item-btn" href="${dump.url ?? ''}" target="_blank">
-    //                                     <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Open</a></li>
-    //                                 ${dump.status !== 'imported' ? `
-    //                                     <li>
-    //                                         <a class="dropdown-item import-item-btn" href="javascript:void(0);" data-id="${dump.id}">
-    //                                             <i class="ri-database-2-fill align-bottom me-2 text-muted"></i> Import
-    //                                         </a>
-    //                                     </li>` : ''}
-    //                             </ul>
-    //                         </div>
-    //                     </td>
-    //                 </tr>
-    //             `);
-    //         });
-    //     });
-    // }
-
     function loadDriveFiles() {
         $.get("/api/datadump", function (data) {
             if (data.length === 0) {
@@ -130,9 +80,9 @@ $(document).ready(function () {
                         data: null,
                         render: function (row) {
                             return `<div class="btn-group mt-4 mt-md-0" role="group" aria-label="Basic example">                                    
-                                        <button class="btn btn-sm btn-primary view-item-btn" data-id="${row.table_name}"><i class="ri-eye-fill align-bottom me-2 text-muted"></i></button>
-                                        <button class="btn btn-sm btn-warning edit-item-btn" data-id="${row.table_name}"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i></button>
-                                        <button class="btn btn-sm btn-danger import-item-btn" data-id="${row.table_name}"><i class="ri-database-2-fill align-bottom me-2 text-muted"></i></button>
+                                        <button class="btn btn-sm btn-primary view-item-btn" data-id="${row.table_name}"><i class="ri-eye-fill"></i></button>
+                                        <button class="btn btn-sm btn-warning edit-item-btn" data-id="${row.table_name}"><i class="ri-pencil-fill"></i></button>
+                                        <button class="btn btn-sm btn-danger import-item-btn" data-id="${row.table_name}"><i class="ri-database-2-fill"></i></button>
                                     </div>
                                 `;
                         }
