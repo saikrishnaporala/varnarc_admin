@@ -129,30 +129,12 @@ $(document).ready(function () {
                     {
                         data: null,
                         render: function (row) {
-                            return `
-                                <div class="dropdown">
-                                    <button class="btn btn-soft-secondary btn-sm dropdown" data-bs-toggle="dropdown">
-                                        <i class="ri-more-fill align-middle"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item view-item-btn" href="javascript:void(0);" data-id="${row.table_name}">
-                                                <i class="ri-eye-fill align-bottom me-2 text-muted"></i> View
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item edit-item-btn" href="${row.url ?? ''}" target="_blank">
-                                                <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Open
-                                            </a>
-                                        </li>
-                                        
-                                            <li>
-                                                <a class="dropdown-item import-item-btn" href="javascript:void(0);" data-id="${row.id}">
-                                                    <i class="ri-database-2-fill align-bottom me-2 text-muted"></i> Import
-                                                </a>
-                                            </li>
-                                    </ul>
-                                </div>`;
+                            return `<div class="btn-group mt-4 mt-md-0" role="group" aria-label="Basic example">                                    
+                                        <button class="btn btn-sm btn-primary view-item-btn" data-id="${row.table_name}"><i class="ri-eye-fill align-bottom me-2 text-muted"></i></button>
+                                        <button class="btn btn-sm btn-warning edit-item-btn" data-id="${row.table_name}"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i></button>
+                                        <button class="btn btn-sm btn-danger import-item-btn" data-id="${row.table_name}"><i class="ri-database-2-fill align-bottom me-2 text-muted"></i></button>
+                                    </div>
+                                `;
                         }
                     }
                 ],
