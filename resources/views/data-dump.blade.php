@@ -87,7 +87,7 @@
                 <div class="card-body">
                     <button id="backBtn" class="btn btn-secondary mb-2">⬅ Back</button>
                     <h4 id="recordsTitle"></h4>
-                    <table id="recordsTable" class="table table-bordered"></table>
+                    <table id="recordsTable" class="table table-bordered" style="width: 100%;"></table>
                 </div>
             </div>
             <!--end card-->

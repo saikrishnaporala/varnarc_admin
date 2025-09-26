@@ -278,9 +278,15 @@ $(document).ready(function () {
                                 title: "Actions",
                                 render: function (data, type, row) {
                                     return `
+                                    <div class="btn-group mt-4 mt-md-0" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-light"><i class="ri-align-right"></i></button>
+                                        <button type="button" class="btn btn-light"><i class="ri-align-center"></i></button>
+                                        <button type="button" class="btn btn-light"><i class="ri-align-left"></i></button>
+                                    
                                         <button class="btn btn-sm btn-primary view-btn" data-id="${row.id}" data-table="${tableName}"><i class="ri-add-box-fill"></i></button>
                                         <button class="btn btn-sm btn-warning edit-btn" data-id="${row.id}" data-table="${tableName}"><i class="ri-pencil-fill"></i></button>
                                         <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}" data-table="${tableName}"><i class="ri-delete-bin-fill"></i></button>
+                                    </div>
                                     `;
                                 }
                             }
