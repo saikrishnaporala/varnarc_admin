@@ -37,8 +37,8 @@ Route::delete('/data/{table}/{id}', [DataDumpController::class, 'deleteRecord'])
 
 use App\Http\Controllers\Data\MappingController;
 
-Route::get('/api/mapping/columns', [MappingController::class, 'getColumns']);
-Route::post('/api/mapping/save', [MappingController::class, 'saveMapping']);
+Route::get('/mapping/columns', [MappingController::class, 'getColumns']);
+Route::post('/mapping/save', [MappingController::class, 'saveMapping']);
 
 
 use App\Http\Controllers\Api\CommandController;
