@@ -42,28 +42,20 @@ class MappingController extends Controller
         ]);
     }
 
-    public function index()
+    // Save or update mapping
+    public function saveMapping(Request $request): JsonResponse
     {
-        // Example: contacts and candidates table
-        $contactColumns = Schema::getColumnListing('contacts');
-        $candidateColumns = Schema::getColumnListing('candidates');
-
-        return view('mapping.index', compact('contactColumns', 'candidateColumns'));
-    }
-
-    public function store(Request $request)
-    {
-        // $request->mapping will contain array of mappings
-        // Example: ['full_name' => 'candidateName', 'email' => 'emailAddress']
-
-        // Save mappings to DB (you may want a dedicated mappings table)
-        DB::table('field_mappings')->insert([
-            'from_table' => 'contacts',
-            'to_table'   => 'candidates',
-            'mapping'    => json_encode($request->mapping),
-            'created_at' => now(),
+        $request->validate([
+            'from_table' => 'required|string',
+            'to_table'   => 'required|string',
+            'mapping'    => 'required|array'
         ]);
 
-        return redirect()->back()->with('success', 'Mapping saved successfully!');
+        $mapping = FieldMapping::updateOrCreate(
+            ['from_table' => $request->from_table, 'to_table' => $request->to_table],
+            ['mapping' => $request->mapping]
+        );
+
+        return response()->json(['success' => true, 'mapping' => $mapping->mapping]);
     }
 }
