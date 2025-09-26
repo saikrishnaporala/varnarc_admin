@@ -31,6 +31,16 @@ Route::post('/import/google-drive', [DataDumpController::class, 'importFromGoogl
 Route::post('/datadump/{id}', [DataDumpController::class, 'import']);
 Route::get('/data/records/{tableName}', [DataDumpController::class, 'getTableRecords'])->name('data.records');
 
+Route::post('/data/{table}/{id}', [DataDumpController::class, 'addToContact']);
+Route::put('/data/{table}/{id}', [DataDumpController::class, 'updateRecord']);
+Route::delete('/data/{table}/{id}', [DataDumpController::class, 'deleteRecord']);
+
+use App\Http\Controllers\Data\MappingController;
+
+Route::get('/mapping/columns', [MappingController::class, 'getColumns']);
+Route::get('/mapping', [MappingController::class, 'index'])->name('mapping.index');
+Route::post('/mapping', [MappingController::class, 'store'])->name('mapping.store');
+
 
 use App\Http\Controllers\Api\CommandController;
 

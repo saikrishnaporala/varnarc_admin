@@ -227,6 +227,25 @@ $(document).ready(function () {
                 }
             });
         });
+
+        let from = tableName;
+        let to = "contacts";
+
+        $.getJSON(`/api/mapping/columns?from=${from}&to=${to}`, function(data) {
+            let rows = '';
+            data.from_columns.forEach(function(fromCol) {
+                rows += `<tr>
+                            <td>${fromCol}</td>
+                            <td>
+                                <select name="mapping[${fromCol}]" class="form-select">
+                                    <option value="">-- Select --</option>`;
+                data.to_columns.forEach(function(toCol) {
+                    rows += `<option value="${toCol}">${toCol}</option>`;
+                });
+                rows += `</select></td></tr>`;
+            });
+            $('#mappingTable tbody').html(rows);
+        });
     });
 
     // Back button → go back to files list
@@ -235,4 +254,6 @@ $(document).ready(function () {
             $('#filesTableWrapper').fadeIn();
         });
     });
+
+    
 });

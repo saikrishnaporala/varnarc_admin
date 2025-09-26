@@ -393,4 +393,75 @@ class DataDumpController extends Controller
             return "Import failed for file: {$file['name']}. Error: " . $e->getMessage(). " Drive File Stat : ".$stat;
         }
     }
+
+    // 🔹 add record to contacts
+    public function addToContacts($table, $id)
+    {
+        try {
+            // 🔹 Get the record from given table
+            $record = DB::table($table)->find($id);
+
+            if (!$record) {
+                return response()->json(['error' => 'Record not found'], 404);
+            }
+
+            // 🔹 Convert stdClass → array
+            $data = (array) $record;
+
+            // 🔹 Map fields to contacts table
+            $contactData = [
+                'name'       => $data['name'] ?? null,
+                'email'      => $data['email'] ?? null,
+                'phone'      => $data['phone'] ?? null,
+                'company'    => $data['company'] ?? null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            // 🔹 Insert into contacts
+            $contactId = DB::table('contacts')->insertGetId($contactData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Contact added successfully',
+                'contact_id' => $contactId
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    // 🔹 Update record
+    public function updateRecord(Request $request, $table, $id)
+    {
+        try {
+            $data = $request->all();
+
+            $updated = DB::table($table)->where('id', $id)->update($data);
+
+            if (!$updated) {
+                return response()->json(['error' => 'Update failed'], 400);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Record updated']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    // 🔹 Delete record
+    public function deleteRecord($table, $id)
+    {
+        try {
+            $deleted = DB::table($table)->where('id', $id)->delete();
+
+            if (!$deleted) {
+                return response()->json(['error' => 'Delete failed'], 400);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Record deleted']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

@@ -87,6 +87,18 @@
                 <div class="card-body">
                     <button id="backBtn" class="btn btn-secondary mb-2">⬅ Back</button>
                     <h4 id="recordsTitle"></h4>
+                    <form id="mappingForm">
+                        <table class="table table-bordered" id="mappingTable">
+                            <thead>
+                                <tr>
+                                    <th>From Column</th>
+                                    <th>To Column</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <button type="submit" class="btn btn-primary">Save Mapping</button>
+                    </form>
                     <table id="recordsTable" class="table table-bordered" style="width: 100%;"></table>
                 </div>
             </div>
