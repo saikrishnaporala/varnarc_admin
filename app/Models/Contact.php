@@ -19,7 +19,6 @@ class Contact extends Model
         'lead_score',
         'tags',
         'industrytype',
-        'designation',
         'current_employer',
         'current_salary',
         'education',

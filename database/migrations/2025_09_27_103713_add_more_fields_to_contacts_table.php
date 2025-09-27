@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('contacts', function (Blueprint $table) {
             $table->string('industrytype')->nullable()->after('tags');
-            $table->string('designation')->nullable()->after('industrytype');
             $table->string('current_employer')->nullable()->after('designation');
             $table->decimal('current_salary', 12, 2)->nullable()->after('current_employer');
             $table->string('education')->nullable()->after('current_salary');
@@ -41,7 +40,6 @@ return new class extends Migration
         Schema::table('contacts', function (Blueprint $table) {
             $table->dropColumn([
                 'industrytype',
-                'designation',
                 'current_employer',
                 'current_salary',
                 'education',
