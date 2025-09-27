@@ -81,7 +81,7 @@ $(document).ready(function () {
                         render: function (row) {
                             return `<div class="btn-group mt-4 mt-md-0" role="group" aria-label="Basic example">                                    
                                         <button class="btn btn-sm btn-primary view-item-btn" data-id="${row.id}"><i class="ri-eye-fill"></i></button>
-                                        <button class="btn btn-sm btn-warning edit-item-btn" data-id="${row.id}"><i class="ri-pencil-fill"></i></button>
+                                        <button class="btn btn-sm btn-warning openLink" data-link="${row.url}"><i class=" ri-external-link-fill"></i></button>
                                         <button class="btn btn-sm btn-danger import-item-btn" data-id="${row.id}"><i class="ri-database-2-fill"></i></button>
                                     </div>
                                 `;
@@ -179,6 +179,11 @@ $(document).ready(function () {
                 Swal.fire("Error", xhr.responseText, "error");
             }
         });
+    });
+
+    $(document).on("click", ".openLink", function () {
+        let url = $(this).data('link');
+        window.open(url, '_blank');
     });
 
     $(document).on('click', '.view-item-btn', function () {

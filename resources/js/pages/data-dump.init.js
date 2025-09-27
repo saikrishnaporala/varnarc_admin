@@ -81,7 +81,7 @@ $(document).ready(function () {
                         render: function (row) {
                             return `<div class="btn-group mt-4 mt-md-0" role="group" aria-label="Basic example">                                    
                                         <button class="btn btn-sm btn-primary view-item-btn" data-id="${row.id}"><i class="ri-eye-fill"></i></button>
-                                        <button class="btn btn-sm btn-warning openLink" data-link="${row.id}"><i class=" ri-external-link-fill"></i></button>
+                                        <button class="btn btn-sm btn-warning openLink" data-link="${row.url}"><i class=" ri-external-link-fill"></i></button>
                                         <button class="btn btn-sm btn-danger import-item-btn" data-id="${row.id}"><i class="ri-database-2-fill"></i></button>
                                     </div>
                                 `;
