@@ -80,9 +80,9 @@ $(document).ready(function () {
                         data: null,
                         render: function (row) {
                             return `<div class="btn-group mt-4 mt-md-0" role="group" aria-label="Basic example">                                    
-                                        <button class="btn btn-sm btn-primary view-item-btn" data-id="${row.table_name}"><i class="ri-eye-fill"></i></button>
-                                        <button class="btn btn-sm btn-warning edit-item-btn" data-id="${row.table_name}"><i class="ri-pencil-fill"></i></button>
-                                        <button class="btn btn-sm btn-danger import-item-btn" data-id="${row.table_name}"><i class="ri-database-2-fill"></i></button>
+                                        <button class="btn btn-sm btn-primary view-item-btn" data-id="${row.id}"><i class="ri-eye-fill"></i></button>
+                                        <button class="btn btn-sm btn-warning edit-item-btn" data-id="${row.id}"><i class="ri-pencil-fill"></i></button>
+                                        <button class="btn btn-sm btn-danger import-item-btn" data-id="${row.id}"><i class="ri-database-2-fill"></i></button>
                                     </div>
                                 `;
                         }

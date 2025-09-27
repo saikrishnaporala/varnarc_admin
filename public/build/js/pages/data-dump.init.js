@@ -80,9 +80,9 @@ $(document).ready(function () {
                         data: null,
                         render: function (row) {
                             return `<div class="btn-group mt-4 mt-md-0" role="group" aria-label="Basic example">                                    
-                                        <button class="btn btn-sm btn-primary view-item-btn" data-id="${row.table_name}"><i class="ri-eye-fill"></i></button>
-                                        <button class="btn btn-sm btn-warning edit-item-btn" data-id="${row.table_name}"><i class="ri-pencil-fill"></i></button>
-                                        <button class="btn btn-sm btn-danger import-item-btn" data-id="${row.table_name}"><i class="ri-database-2-fill"></i></button>
+                                        <button class="btn btn-sm btn-primary view-item-btn" data-id="${row.id}"><i class="ri-eye-fill"></i></button>
+                                        <button class="btn btn-sm btn-warning edit-item-btn" data-id="${row.id}"><i class="ri-pencil-fill"></i></button>
+                                        <button class="btn btn-sm btn-danger import-item-btn" data-id="${row.id}"><i class="ri-database-2-fill"></i></button>
                                     </div>
                                 `;
                         }
@@ -234,13 +234,18 @@ $(document).ready(function () {
         $.getJSON(`/api/mapping/columns?from=${from}&to=${to}`, function(data) {
             let rows = '';
             data.from_columns.forEach(function(fromCol) {
+                let selected = '';
+                if (data.saved_mapping && data.saved_mapping[fromCol]) {
+                    selected = data.saved_mapping[fromCol];
+                }
+    
                 rows += `<tr>
                             <td>${fromCol}</td>
                             <td>
                                 <select name="mapping[${fromCol}]" class="form-select">
                                     <option value="">-- Select --</option>`;
                 data.to_columns.forEach(function(toCol) {
-                    rows += `<option value="${toCol}">${toCol}</option>`;
+                    rows += `<option value="${toCol}" ${selected == toCol ? 'selected' : ''}>${toCol}</option>`;
                 });
                 rows += `</select></td></tr>`;
             });
@@ -255,5 +260,30 @@ $(document).ready(function () {
         });
     });
 
+    $('#mappingForm').submit(function(e){
+        e.preventDefault();
+        let from = $('#fromTable').val();
+        let to = $('#toTable').val();
+        let mapping = {};
     
+        $('#mappingTable select').each(function(){
+            let key = $(this).attr('name').replace('mapping[','').replace(']','');
+            let value = $(this).val();
+            if(value) mapping[key] = value;
+        });
+    
+        $.ajax({
+            url: '/api/mapping/save',
+            type: 'POST',
+            data: {
+                from_table: from,
+                to_table: to,
+                mapping: mapping,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res){
+                alert('Mapping saved successfully!');
+            }
+        });
+    });
 });
