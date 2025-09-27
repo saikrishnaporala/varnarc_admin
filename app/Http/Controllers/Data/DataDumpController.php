@@ -257,10 +257,8 @@ class DataDumpController extends Controller
     public function import($id)
     {
         $tempPath = null;
+        $file = DriveFile::findOrFail($id);
         try {
-            // Find file record
-            $file = DriveFile::findOrFail($id);
-
             // Download + import
             // $tempPath = storage_path("app/temp_import_" . $file['file_id'] . ".xlsx");
             // $downloadstat = $this->driveService->downloadFile($file['file_id'], $tempPath);
