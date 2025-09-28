@@ -129,7 +129,7 @@ class ImportService
                 return trim($col, '_') ?: 'col_' . uniqid();
             }, $columns);
 
-            Log::info("Table name: ".json_encode($normalizedColumns));
+            Log::info("Table name: ".json_encode($columns));
 
             // ✅ Ensure no duplicates
             $uniqueCols = [];
