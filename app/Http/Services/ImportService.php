@@ -33,6 +33,7 @@ class ImportService
                 throw new Exception("File does not contain header row");
             }
 
+            Log::info("process file - first column: ".json_encode($columns));
             // ✅ Normalize column names
             $normalizedColumns = array_map(function ($col) {
                 $col = strtolower(trim($col));

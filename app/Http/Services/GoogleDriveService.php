@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use Google\Client;
 use Google\Service\Drive;
+use Illuminate\Support\Facades\Log;
 
 class GoogleDriveService
 {
@@ -26,12 +27,14 @@ class GoogleDriveService
                 // ✅ Export Google Sheets as CSV
                 $response = $this->service->files->export($fileId, 'text/csv');
                 $extension = '.csv';
+                Log::info("Download google-apps: ".json_encode($response));
                 break;
 
             case 'text/csv':
                 // ✅ Download CSV file directly
                 $response = $this->service->files->get($fileId, ['alt' => 'media']);
                 $extension = '.csv';
+                Log::info("Download csv: ".json_encode($response));
                 break;
 
             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': // XLSX
@@ -39,6 +42,7 @@ class GoogleDriveService
                 // ✅ Download Excel file directly
                 $response = $this->service->files->get($fileId, ['alt' => 'media']);
                 $extension = '.xlsx';
+                Log::info("Download xlsx: ".json_encode($response));
                 break;
 
             default:
