@@ -256,6 +256,10 @@ class DataDumpController extends Controller
 
     public function import($id)
     {
+        ini_set('memory_limit', '2048M');
+        ini_set('max_execution_time', 0); // no time limit
+        set_time_limit(0);
+        
         $tempPath = null;
         $file = DriveFile::findOrFail($id);
         try {
