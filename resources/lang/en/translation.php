@@ -20,6 +20,7 @@ return [
     "create-service"=>"Create Service",
     "commands" => "Commands Execution",
     "data-dump" => "Data Dump",
+    "data-dump" => "Data Dump",
     "orders"=>"Orders",
     "order-details"=>"Order Details",
     "customers"=>"Customers",
@@ -235,6 +236,10 @@ return [
     "links" => "Links",
     "range-area" => "Range Area",
     "funnel" => "Funnel",
+    "linkedin" => "Linked In",
+    "facebook" => "Facebook",
+    "twitter" => "X",
+    "youtube" => "Youtube"
 ];
 ?>
 

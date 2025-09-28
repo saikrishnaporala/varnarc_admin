@@ -78,7 +78,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#sidebarCRM" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCRM">@lang('translation.crm')
+                    <a href="#sidebarCRM" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCRM">
+                        <i class="ri-service-fill"></i>@lang('translation.crm')
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarCRM">
                         <ul class="nav nav-sm flex-column">
@@ -93,6 +94,30 @@
                             </li>
                             <li class="nav-item">
                                 <a href="apps-crm-leads" class="nav-link">@lang('translation.leads')</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#sidebarAnalytics" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCRM">
+                        <i class="ri-service-fill"></i>@lang('translation.analytics')
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarAnalytics">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="apps-crm-contacts" class="nav-link">@lang('translation.google')</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="apps-crm-companies" class="nav-link">@lang('translation.facebook')</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="apps-crm-deals" class="nav-link">@lang('translation.linkedin')</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="apps-crm-leads" class="nav-link">@lang('translation.twitter')</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="apps-crm-leads" class="nav-link">@lang('translation.youtube')</a>
                             </li>
                         </ul>
                     </div>

@@ -45,3 +45,13 @@ use App\Http\Controllers\Api\CommandController;
 
 Route::post('/execute-command', [CommandController::class, 'execute']);
 Route::get('/command-logs', [CommandController::class, 'logs']);
+
+// use App\Http\Controllers\Api\PageController;
+// Route::get('/pages/{slug}', [PageController::class, 'show']);
+
+// use App\Http\Controllers\Api\PostController;
+// Route::get('/posts', [PostController::class, 'index']);
+// Route::get('/posts/{slug}', [PostController::class, 'show']);
+
+// use App\Http\Controllers\Api\ServicesController;
+// Route::get('/services', [ServicesController::class, 'index']);
